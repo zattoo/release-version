@@ -1,0 +1,24 @@
+name: Release Version
+
+on:
+  # manually dispatched from Actions tab with Run Workflow
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+jobs:
+  release-version:
+    name: Release Version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Release Version
+        uses: ./ # Uses an action in the root directory
+        with:
+          token: ${{github.token}}
+          version: ${{github.event.inputs.version}}
+          project: ''
+          strategy: 'release'
+          production: 'v1'
+          release-date-format: 'DD.MM.YYYY'

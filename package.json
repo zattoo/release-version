@@ -1,0 +1,37 @@
+{
+    "name": "release-version",
+    "version": "1.0.0",
+    "description": "Cut release at ease",
+    "main": "action.yml",
+    "scripts": {
+        "package": "ncc build src/index.js -o dist",
+        "test": "eslint . && jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/zattoo/release-version.git"
+    },
+    "keywords": [
+        "version",
+        "release",
+        "projects"
+    ],
+    "author": "jeniamoroz",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/zattoo/release-version/issues"
+    },
+    "homepage": "https://github.com/zattoo/release-version#readme",
+    "dependencies": {
+        "@actions/core": "1.2.6",
+        "@actions/github": "4.0.0"
+    },
+    "devDependencies": {
+        "@zattoo/eslint-config": "11.0.4",
+        "@zeit/ncc": "0.22.3",
+        "eslint": "7.14.0",
+        "eslint-config-airbnb-base": "14.2.0",
+        "eslint-plugin-import": "2.22.0",
+        "jest": "26.6.3"
+    }
+}
