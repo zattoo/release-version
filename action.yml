@@ -8,8 +8,10 @@ inputs:
   project:
     default: ''
   strategy:
-    default: ''
+    required: true
+    default: 'release'
   release-date-format:
+    required: true
     default: 'DD.MM.YYYY'
 runs:
   using: 'node12'

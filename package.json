@@ -4,6 +4,7 @@
     "description": "Cut release at ease",
     "main": "action.yml",
     "scripts": {
+        "lint:fix": "eslint . --fix",
         "package": "ncc build src/index.js -o dist",
         "test": "eslint . && jest"
     },

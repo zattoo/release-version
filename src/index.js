@@ -34,18 +34,18 @@ const createVersion = require('./create-version');
     // prepare names
     let releaseBranch = strategy;
     let productionBranch = production;
-    let releaseTitle = releaseBranch.charAt(0).toUpperCase() + releaseBranch.slice(1);
+    let releaseTitle = `${strategy.charAt(0).toUpperCase() + strategy.slice(1)} ${version}`;
     if (project) {
-        releaseTitle = `${releaseTitle} ${project}.`;
+        releaseTitle = `${releaseTitle}-${project}.`;
         releaseBranch = `${releaseBranch}/${project}`;
         productionBranch = `${productionBranch}/${project}`;
     }
-    releaseTitle = `${releaseTitle} ${version}`;
 
     // make changes
     const releaseDate = createVersion.getReleaseDate(releaseDateFormat);
     const changelog = await createVersion.changeChangelogVersion(version, project, releaseDate);
     const pkg = await createVersion.changePackageVersion(version, project);
+    const releaseDescription = createVersion.extractReleaseChangelog(changelog[0], version);
 
     try {
         await octokit.git.createRef({
@@ -87,6 +87,7 @@ const createVersion = require('./create-version');
     await octokit.pulls.create({
         ...basePayload,
         title: releaseTitle,
+        body: releaseDescription,
         head: releaseBranch,
         base: productionBranch,
         maintainer_can_modify: true, // allows maintainers to edit pull-request

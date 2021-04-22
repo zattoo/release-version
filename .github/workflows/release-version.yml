@@ -19,6 +19,4 @@ jobs:
           token: ${{github.token}}
           version: ${{github.event.inputs.version}}
           project: ''
-          strategy: 'release'
           production: 'v1'
-          release-date-format: 'DD.MM.YYYY'

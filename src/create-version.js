@@ -18,7 +18,7 @@ module.exports.getReleaseDate = (releaseDateFormat) => {
 /**
  * @param {string} version
  * @param {string} [project]
- * @returns {string}
+ * @returns {string[]}
  */
 module.exports.changePackageVersion = async (version, project) => {
     if (!version) {
@@ -36,7 +36,7 @@ module.exports.changePackageVersion = async (version, project) => {
     const pkg = JSON.parse(await fsp.readFile(pkgPath, 'utf8'));
     pkg.version = `${version}`;
     const modifiedPkg = `${JSON.stringify(pkg, null, 4)}\n`;
-    // await fsp.writeFile(pkgPath, modifiedPkg);
+    await fsp.writeFile(pkgPath, modifiedPkg);
     return [pkgPath, modifiedPkg];
 };
 
@@ -44,7 +44,7 @@ module.exports.changePackageVersion = async (version, project) => {
  * @param {string} version
  * @param {string} [project]
  * @param {string} [releaseDate]
- * @returns {string}
+ * @returns {string[]}
  */
 module.exports.changeChangelogVersion = async (version, project, releaseDate) => {
     if (!version) {
@@ -64,6 +64,28 @@ module.exports.changeChangelogVersion = async (version, project, releaseDate) =>
         throw new Error('Cannot find Unreleased section in CHANGELOG.md');
     }
     const modifiedChangelog = changelog.replace('## Unreleased', `## [${version}] - ${releaseDate}`);
-    // await fsp.writeFile(changelogPath, changelog);
+    await fsp.writeFile(changelogPath, modifiedChangelog);
     return [changelogPath, modifiedChangelog];
+};
+
+const firstMatching = (lines, search, start = 0) => {
+    return lines.findIndex((l, i) => {
+        return i >= start && l.startsWith(search);
+    });
+};
+
+/**
+ * @param {string} content
+ * @param {string} [version] - if not specified - last release will be taken
+ * @returns {string}
+ */
+module.exports.extractReleaseChangelog = (content, version) => {
+    const changelogLines = content.split('\n');
+    let firstReleaseTitleIndex = firstMatching(changelogLines, '## [');
+    if (version) {
+        firstReleaseTitleIndex = firstMatching(changelogLines, `## [${version}]`);
+    }
+    const secondReleaseTitleIndex = firstMatching(changelogLines, '## [', firstReleaseTitleIndex + 1);
+    const releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex, secondReleaseTitleIndex);
+    return releaseChangelogLines.join('\n');
 };

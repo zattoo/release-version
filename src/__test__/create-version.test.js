@@ -75,3 +75,30 @@ describe('changeChangelogVersion', () => {
         expect(spy.mock.calls[0]).toEqual(['projects/app/CHANGELOG.md', '## [2.5.9] - 2021-01-04']);
     });
 });
+
+const changelogContent = `# Changelog
+All notable changes to this project will be documented in this file.
+
+## [1.0.1] - 09.04.2021
+
+### Added
+- Some Functionality
+
+## [1.0.0] - 09.04.2021
+
+### Added
+- Initial Functionality
+`;
+
+const releaseContent = `## [1.0.1] - 09.04.2021
+
+### Added
+- Some Functionality
+`;
+
+describe('extractReleaseChangelog', () => {
+    it('extract changelog content', () => {
+        const result = createVersion.extractReleaseChangelog(changelogContent);
+        expect(result).toEqual(releaseContent);
+    });
+});
