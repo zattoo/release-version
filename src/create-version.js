@@ -68,7 +68,7 @@ module.exports.changeChangelogVersion = async (version, project, releaseDate) =>
     return [changelogPath, modifiedChangelog];
 };
 
-const firstMatching = (lines, search, start = 0) => {
+const indexOfLineStartWith = (lines, search, start = 0) => {
     return lines.findIndex((l, i) => {
         return i >= start && l.startsWith(search);
     });
@@ -81,11 +81,16 @@ const firstMatching = (lines, search, start = 0) => {
  */
 module.exports.extractReleaseChangelog = (content, version) => {
     const changelogLines = content.split('\n');
-    let firstReleaseTitleIndex = firstMatching(changelogLines, '## [');
+    let firstReleaseTitleIndex = indexOfLineStartWith(changelogLines, '## [');
     if (version) {
-        firstReleaseTitleIndex = firstMatching(changelogLines, `## [${version}]`);
+        firstReleaseTitleIndex = indexOfLineStartWith(changelogLines, `## [${version}]`);
     }
-    const secondReleaseTitleIndex = firstMatching(changelogLines, '## [', firstReleaseTitleIndex + 1);
-    const releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex, secondReleaseTitleIndex);
+    const secondReleaseTitleIndex = indexOfLineStartWith(changelogLines, '## [', firstReleaseTitleIndex + 1);
+    let releaseChangelogLines;
+    if (secondReleaseTitleIndex < 0) {
+        releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex);
+    } else {
+        releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex, secondReleaseTitleIndex);
+    }
     return releaseChangelogLines.join('\n');
 };
