@@ -86,6 +86,11 @@ module.exports.extractReleaseChangelog = (content, version) => {
         firstReleaseTitleIndex = firstMatching(changelogLines, `## [${version}]`);
     }
     const secondReleaseTitleIndex = firstMatching(changelogLines, '## [', firstReleaseTitleIndex + 1);
-    const releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex, secondReleaseTitleIndex);
+    let releaseChangelogLines;
+    if (secondReleaseTitleIndex < 0) {
+        releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex);
+    } else {
+        releaseChangelogLines = changelogLines.slice(firstReleaseTitleIndex, secondReleaseTitleIndex);
+    }
     return releaseChangelogLines.join('\n');
 };
