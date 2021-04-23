@@ -45,7 +45,7 @@ const createVersion = require('./create-version');
     const releaseDate = createVersion.getReleaseDate(releaseDateFormat);
     const changelog = await createVersion.changeChangelogVersion(version, project, releaseDate);
     const pkg = await createVersion.changePackageVersion(version, project);
-    const releaseDescription = createVersion.extractReleaseChangelog(changelog[0], version);
+    const releaseDescription = createVersion.extractReleaseChangelog(changelog[1], version);
 
     try {
         await octokit.git.createRef({
