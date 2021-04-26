@@ -12,6 +12,7 @@ jobs:
     name: Release Version
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Release Version
         uses: ./ # Uses an action in the root directory
         with:

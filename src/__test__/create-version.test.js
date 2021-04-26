@@ -67,6 +67,14 @@ describe('changeChangelogVersion', () => {
         expect(spy.mock.calls[0]).toEqual(['CHANGELOG.md', '## [1.2.3] - 2021-01-04']);
     });
 
+    it('should change unreleased with version for release', async () => {
+        jest.spyOn(fsp, 'stat').mockImplementationOnce(() => Promise.resolve(true));
+        jest.spyOn(fsp, 'readFile').mockImplementationOnce(() => Promise.resolve('## [1.2.3] - Unreleased'));
+        const spy = jest.spyOn(fsp, 'writeFile').mockImplementationOnce(() => Promise.resolve());
+        await createVersion.changeChangelogVersion('1.2.3', null, '2021-01-04');
+        expect(spy.mock.calls[0]).toEqual(['CHANGELOG.md', '## [1.2.3] - 2021-01-04']);
+    });
+
     it('should change unreleased for release with project', async () => {
         jest.spyOn(fsp, 'stat').mockImplementationOnce(() => Promise.resolve(true));
         jest.spyOn(fsp, 'readFile').mockImplementationOnce(() => Promise.resolve('## Unreleased'));

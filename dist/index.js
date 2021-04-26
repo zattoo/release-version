@@ -160,10 +160,12 @@ module.exports.changeChangelogVersion = async (version, project, releaseDate) =>
     }
 
     const changelog = await fsp.readFile(changelogPath, 'utf8');
-    if (!changelog.includes('## Unreleased')) {
+    if (!changelog.includes('Unreleased')) {
         throw new Error('Cannot find Unreleased section in CHANGELOG.md');
     }
-    const modifiedChangelog = changelog.replace('## Unreleased', `## [${version}] - ${releaseDate}`);
+    const modifiedChangelog = changelog
+        .replace('## Unreleased', `## [${version}] - ${releaseDate}`)
+        .replace(`## [${version}] - Unreleased`, `## [${version}] - ${releaseDate}`);
     await fsp.writeFile(changelogPath, modifiedChangelog);
     return [changelogPath, modifiedChangelog];
 };
