@@ -27,13 +27,13 @@ Required. Either `release` which is calm an normal or `hotfix` for firefighters.
 
 `string`
 
-Required. Branch name, where release will go.
+Required. Branch name, where release will go. If `project` is also specifed, this will be concatenated together.
 
 ### `release-date-format`
 
 `string`
 
-Optional. Default `DD.MM.YYYY`. String representing template of the date that should be added to Changelog.
+Required. Default `DD.MM.YYYY`. String representing template of the date that should be added to Changelog.
 Example: `YYYY-MM-DD`
 
 ## Usage Example

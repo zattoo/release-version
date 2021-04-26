@@ -10,6 +10,9 @@ inputs:
   strategy:
     required: true
     default: 'release'
+  production:
+    required: true
+    default: 'production'
   release-date-format:
     required: true
     default: 'DD.MM.YYYY'
