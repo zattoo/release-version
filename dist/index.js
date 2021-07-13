@@ -21648,7 +21648,7 @@ const quit = (message, exitCode) => {
 
         core.info(`project ${project}`);
 
-        const content = await octokit.repos.getContent({
+        const content = await octokit.rest.repos.getContent({
             owner,
             repo,
             path: filename,
