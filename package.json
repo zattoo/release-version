@@ -30,6 +30,7 @@
     "devDependencies": {
         "@zattoo/eslint-config": "11.0.4",
         "@zeit/ncc": "0.22.3",
+        "lodash": "4.17.21",
         "eslint": "7.30.0",
         "eslint-plugin-import": "2.23.4"
     }

@@ -1,118 +1,14 @@
-{
-    "status": 200,
-    "url": "https://api.github.com/repos/zattoo/cactus/commits/0eace4448a5ed2804084d18bcce6d0a5e12f58b4",
-    "headers": {
-        "access-control-allow-origin": "*",
-        "access-control-expose-headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset",
-        "cache-control": "private, max-age=60, s-maxage=60",
-        "connection": "close",
-        "content-encoding": "gzip",
-        "content-security-policy": "default-src 'none'",
-        "content-type": "application/json; charset=utf-8",
-        "date": "Tue, 13 Jul 2021 16:19:18 GMT",
-        "etag": "W/\"5d8a87667b4b1df67bb1b2636f7284bdab5cfd5fdc92f3ace638ac0720d9cda2\"",
-        "last-modified": "Tue, 13 Jul 2021 16:18:17 GMT",
-        "referrer-policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
-        "server": "GitHub.com",
-        "strict-transport-security": "max-age=31536000; includeSubdomains; preload",
-        "transfer-encoding": "chunked",
-        "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With",
-        "x-accepted-oauth-scopes": "",
-        "x-content-type-options": "nosniff",
-        "x-frame-options": "deny",
-        "x-github-media-type": "github.v3; format=json",
-        "x-github-request-id": "0441:47AA:962BDA2:10E78FC1:60EDBD06",
-        "x-oauth-scopes": "delete:packages, gist, notifications, repo, user, workflow, write:discussion, write:packages",
-        "x-ratelimit-limit": "5000",
-        "x-ratelimit-remaining": "4836",
-        "x-ratelimit-reset": "1626194561",
-        "x-ratelimit-resource": "core",
-        "x-ratelimit-used": "164",
-        "x-xss-protection": "0"
-    },
-    "data": {
-        "sha": "0eace4448a5ed2804084d18bcce6d0a5e12f58b4",
-        "node_id": "MDY6Q29tbWl0Mzg1NTkyNjE0OjBlYWNlNDQ0OGE1ZWQyODA0MDg0ZDE4YmNjZTZkMGE1ZTEyZjU4YjQ=",
-        "commit": {
-            "author": {
-                "name": "godban",
-                "email": "bogdan.plieshka@zattoo.com",
-                "date": "2021-07-13T16:18:17Z"
-            },
-            "committer": {
-                "name": "godban",
-                "email": "bogdan.plieshka@zattoo.com",
-                "date": "2021-07-13T16:18:17Z"
-            },
-            "message": "...",
-            "tree": {
-                "sha": "46aaf157f63a1536bdb9df9a9d1666473f870088",
-                "url": "https://api.github.com/repos/zattoo/cactus/git/trees/46aaf157f63a1536bdb9df9a9d1666473f870088"
-            },
-            "url": "https://api.github.com/repos/zattoo/cactus/git/commits/0eace4448a5ed2804084d18bcce6d0a5e12f58b4",
-            "comment_count": 0,
-            "verification": {
-                "verified": false,
-                "reason": "unsigned",
-                "signature": null,
-                "payload": null
-            }
-        },
-        "url": "https://api.github.com/repos/zattoo/cactus/commits/0eace4448a5ed2804084d18bcce6d0a5e12f58b4",
-        "html_url": "https://github.com/zattoo/cactus/commit/0eace4448a5ed2804084d18bcce6d0a5e12f58b4",
-        "comments_url": "https://api.github.com/repos/zattoo/cactus/commits/0eace4448a5ed2804084d18bcce6d0a5e12f58b4/comments",
-        "author": {
-            "login": "gotbahn",
-            "id": 2461970,
-            "node_id": "MDQ6VXNlcjI0NjE5NzA=",
-            "avatar_url": "https://avatars.githubusercontent.com/u/2461970?v=4",
-            "gravatar_id": "",
-            "url": "https://api.github.com/users/gotbahn",
-            "html_url": "https://github.com/gotbahn",
-            "followers_url": "https://api.github.com/users/gotbahn/followers",
-            "following_url": "https://api.github.com/users/gotbahn/following{/other_user}",
-            "gists_url": "https://api.github.com/users/gotbahn/gists{/gist_id}",
-            "starred_url": "https://api.github.com/users/gotbahn/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/gotbahn/subscriptions",
-            "organizations_url": "https://api.github.com/users/gotbahn/orgs",
-            "repos_url": "https://api.github.com/users/gotbahn/repos",
-            "events_url": "https://api.github.com/users/gotbahn/events{/privacy}",
-            "received_events_url": "https://api.github.com/users/gotbahn/received_events",
-            "type": "User",
-            "site_admin": false
-        },
-        "committer": {
-            "login": "gotbahn",
-            "id": 2461970,
-            "node_id": "MDQ6VXNlcjI0NjE5NzA=",
-            "avatar_url": "https://avatars.githubusercontent.com/u/2461970?v=4",
-            "gravatar_id": "",
-            "url": "https://api.github.com/users/gotbahn",
-            "html_url": "https://github.com/gotbahn",
-            "followers_url": "https://api.github.com/users/gotbahn/followers",
-            "following_url": "https://api.github.com/users/gotbahn/following{/other_user}",
-            "gists_url": "https://api.github.com/users/gotbahn/gists{/gist_id}",
-            "starred_url": "https://api.github.com/users/gotbahn/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/gotbahn/subscriptions",
-            "organizations_url": "https://api.github.com/users/gotbahn/orgs",
-            "repos_url": "https://api.github.com/users/gotbahn/repos",
-            "events_url": "https://api.github.com/users/gotbahn/events{/privacy}",
-            "received_events_url": "https://api.github.com/users/gotbahn/received_events",
-            "type": "User",
-            "site_admin": false
-        },
-        "parents": [
-            {
-                "sha": "bd9783f086ef95479f73b655093084ff45d59081",
-                "url": "https://api.github.com/repos/zattoo/cactus/commits/bd9783f086ef95479f73b655093084ff45d59081",
-                "html_url": "https://github.com/zattoo/cactus/commit/bd9783f086ef95479f73b655093084ff45d59081"
-            }
-        ],
-        "stats": {
-            "total": 0,
-            "additions": 0,
-            "deletions": 0
-        },
-        "files": []
+[
+    {
+        "sha": "3ed2eff52364c8a886d17e822482945687794fc3",
+        "filename": "projects/app/CHANGELOG.md",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "blob_url": "https://github.com/zattoo/cactus/blob/546a8b3740e1c8a8fd0042caa8bf8feab08830e1/projects/app/CHANGELOG.md",
+        "raw_url": "https://github.com/zattoo/cactus/raw/546a8b3740e1c8a8fd0042caa8bf8feab08830e1/projects/app/CHANGELOG.md",
+        "contents_url": "https://api.github.com/repos/zattoo/cactus/contents/projects/app/CHANGELOG.md?ref=546a8b3740e1c8a8fd0042caa8bf8feab08830e1",
+        "patch": "@@ -6,7 +6,7 @@ and this project adheres to [Company Versioning](https://zattoo2.atlassian.net/w\n \n ## [3.2130.0] - Unreleased\n \n-Dump\n+Dump 1\n \n ### Fixed\n - [WEB-2485](https://zattoo2.atlassian.net/browse/WEB-2485) Video-ads keep playing sound after player is closed"
     }
-}
+]

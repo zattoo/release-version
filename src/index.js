@@ -1,5 +1,11 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const _ = require('lodash');
+
+const quit = (message, exitCode) => {
+    core.info(message);
+    process.exit(exitCode);
+};
 
 (async () => {
     const token = core.getInput('token', {required: true});
@@ -22,9 +28,17 @@ const github = require('@actions/github');
         ref: sha,
     });
 
-    core.info(`files: ${JSON.stringify(commit.data.files)}`);
+    const {files} = commit.data;
 
+    if (_.isEmpty(files)) {
+        quit('no changes', 0);
+    }
+
+    const changelogs = files.filter((file) => file.filename.includes('CHANGELOG.md'));
+
+    if (_.isEmpty(changelogs)) {
+        quit('no changelogs changes', 0);
+    }
 })().catch((error) => {
-    core.setFailed(error);
-    process.exit(1);
+    quit(error, 1);
 });
