@@ -18,21 +18,17 @@ const github = require('@actions/github');
     const base = context.payload.before;
     const head = context.payload.after;
 
-    core.info(`Base commit: ${base}`);
-    core.info(`Head commit: ${head}`);
+    core.info(`commit: ${sha}`);
 
-    console.log('octokit', octokit);
     console.log('rest', octokit.rest);
-    console.log('repos', octokit.rest.repos);
 
-    const compare = await octokit.rest.repos.compareCommits({
-        base,
-        head,
-        owner: context.repo.owner,
-        repo: context.repo.repo
+    const commit = await octokit.rest.repos.getCommit({
+        owner,
+        repo,
+        ref: sha,
     });
 
-    core.info(compare);
+    core.info(commit);
 
 })().catch((error) => {
     core.setFailed(error);
