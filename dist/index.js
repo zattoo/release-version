@@ -21655,7 +21655,9 @@ const quit = (message, exitCode) => {
             ref: current_sha,
         });
 
-        core.info(JSON.stringify(content));
+        const contentString = Buffer.from(content.data.content, 'base64').toString();
+
+        core.info(contentString);
     };
 
     await Promise.all(changelogs.map(proceed));
