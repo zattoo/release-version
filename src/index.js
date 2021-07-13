@@ -22,7 +22,7 @@ const github = require('@actions/github');
         ref: sha,
     });
 
-    core.info(JSON.stringify(commit));
+    core.info(`files: ${JSON.stringify(commit.files)}`);
 
 })().catch((error) => {
     core.setFailed(error);
