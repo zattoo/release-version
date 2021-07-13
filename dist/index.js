@@ -21911,7 +21911,7 @@ const quit = (message, exitCode) => {
             ref: current_sha,
         });
 
-        const changelog = parseChangelog({text: Buffer.from(content.data.content, 'base64').toString()})
+        const changelog = await parseChangelog({text: Buffer.from(content.data.content, 'base64').toString()})
 
         core.info(JSON.stringify(changelog));
     };
