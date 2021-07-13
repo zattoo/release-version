@@ -6,7 +6,7 @@ const github = require('@actions/github');
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
     const {
-        ref,
+        sha,
         payload
     } = github.context;
     const {repository} = payload;
@@ -14,12 +14,12 @@ const github = require('@actions/github');
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    console.log('github.context.ref', ref);
+    console.log('github.context.sha', sha);
 
     const files = await octokit.repos.getCommit({
         owner,
         repo,
-        ref,
+        ref: sha,
     });
 
     files.data.map((file) => {
