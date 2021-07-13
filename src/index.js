@@ -9,9 +9,15 @@ const github = require('@actions/github');
     const repo = github.context.payload.repository.name;
     const owner = github.context.payload.repository.full_name.split('/')[0];
 
+    console.log('github.context.sha', github.context.sha);
 
-    console.log(repo);
-    console.log(owner);
+    const files = await octokit.repos.getCommit({
+        owner,
+        repo,
+        ref: github.context.sha,
+    });
+
+    return files.data.map((file) => file.filename);
 
 })().catch((error) => {
     core.setFailed(error);
