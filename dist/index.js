@@ -21609,17 +21609,18 @@ const quit = (message, exitCode) => {
 (async () => {
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
+
     const {context} = github;
+
     const {
         sha,
         payload
     } = context;
+
     const {repository} = payload;
 
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
-
-    core.info(`commit: ${sha}`);
 
     const commit = await octokit.rest.repos.getCommit({
         owner,
@@ -21636,8 +21637,17 @@ const quit = (message, exitCode) => {
     const changelogs = files.filter((file) => file.filename.includes('CHANGELOG.md'));
 
     if (_.isEmpty(changelogs)) {
-        quit('no changelogs changes', 0);
+        quit('no changelog changes', 0);
     }
+
+    changelogs.forEach((changelog) => {
+        const {patch} = changelog;
+
+        let [, project] = patch.split('/');
+
+        core.info(`project ${project}`);
+    });
+
 })().catch((error) => {
     quit(error, 1);
 });
