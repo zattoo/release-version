@@ -14,7 +14,7 @@ const quit = (message, exitCode) => {
     const {context} = github;
 
     const {
-        sha,
+        sha: current_sha,
         payload
     } = context;
 
@@ -26,7 +26,7 @@ const quit = (message, exitCode) => {
     const commit = await octokit.rest.repos.getCommit({
         owner,
         repo,
-        ref: sha,
+        ref: current_sha,
     });
 
     const {files} = commit.data;
@@ -41,17 +41,25 @@ const quit = (message, exitCode) => {
         quit('no changelog changes', 0);
     }
 
-    changelogs.forEach((changelog) => {
-        const {filename} = changelog;
-
-        core.info(filename);
+    const proceed = async (item) => {
+        const {filename} = item;
 
         const split = filename.split('/');
         const project = split[split.length - 2];
 
         core.info(`project ${project}`);
-    });
 
+        const content = await octokit.repos.getContent({
+            owner,
+            repo,
+            path: filename,
+            ref: current_sha,
+        });
+
+        core.info(content);
+    };
+
+    await Promise.all(changelogs.map(proceed));
 })().catch((error) => {
     quit(error, 1);
 });
