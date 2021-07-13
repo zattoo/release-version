@@ -4385,28 +4385,30 @@ const github = __webpack_require__(469);
     // extract input
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
+    const {context} = github;
     const {
         sha,
         payload
-    } = github.context;
+    } = context;
     const {repository} = payload;
 
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    console.log('github.context.sha', sha);
+    const base = context.payload.before;
+    const head = context.payload.after;
 
-    const files = await octokit.rest.git.getCommit({
-        owner,
-        repo,
-        commit_sha: sha,
+    core.info(`Base commit: ${base}`);
+    core.info(`Head commit: ${head}`);
+
+    const compare = await octokit.rest.repos.compareCommits({
+        base,
+        head,
+        owner: context.repo.owner,
+        repo: context.repo.repo
     });
 
-    console.log('files', files);
-
-    files.data.map((file) => {
-        console.log(file.filename);
-    });
+    core.info(compare);
 
 })().catch((error) => {
     core.setFailed(error);
