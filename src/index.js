@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const parseChangelog = require('changelog-parser');
 const _ = require('lodash');
 
 const quit = (message, exitCode) => {
@@ -56,9 +57,9 @@ const quit = (message, exitCode) => {
             ref: current_sha,
         });
 
-        const contentString = Buffer.from(content.data.content, 'base64').toString();
+        const changelog = parseChangelog({text: Buffer.from(content.data.content, 'base64').toString()})
 
-        core.info(contentString);
+        core.info(JSON.stringify(changelog));
     };
 
     await Promise.all(changelogs.map(proceed));
