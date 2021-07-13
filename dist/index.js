@@ -4382,7 +4382,6 @@ const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 
 (async () => {
-    // extract input
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
     const {context} = github;
@@ -4395,12 +4394,7 @@ const github = __webpack_require__(469);
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    const base = context.payload.before;
-    const head = context.payload.after;
-
     core.info(`commit: ${sha}`);
-
-    console.log('rest', octokit.rest);
 
     const commit = await octokit.rest.repos.getCommit({
         owner,
