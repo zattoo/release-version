@@ -4386,7 +4386,7 @@ const github = __webpack_require__(469);
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
     const {
-        ref,
+        sha,
         payload
     } = github.context;
     const {repository} = payload;
@@ -4394,12 +4394,12 @@ const github = __webpack_require__(469);
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    console.log('github.context.ref', ref);
+    console.log('github.context.sha', sha);
 
-    const files = await octokit.repos.getCommit({
+    const files = await octokit.rest.repos.getCommit({
         owner,
         repo,
-        ref,
+        ref: sha,
     });
 
     files.data.map((file) => {

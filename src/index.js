@@ -16,7 +16,7 @@ const github = require('@actions/github');
 
     console.log('github.context.sha', sha);
 
-    const files = await octokit.repos.getCommit({
+    const files = await octokit.rest.repos.getCommit({
         owner,
         repo,
         ref: sha,
