@@ -44,7 +44,10 @@ const quit = (message, exitCode) => {
     changelogs.forEach((changelog) => {
         const {filename} = changelog;
 
-        let [, project] = filename.split('/');
+        core.info(filename);
+
+        const split = filename.split('/');
+        const project = split[split.length - 2];
 
         core.info(`project ${project}`);
     });
