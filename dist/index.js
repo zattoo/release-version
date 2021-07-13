@@ -4402,7 +4402,7 @@ const github = __webpack_require__(469);
         ref: sha,
     });
 
-    core.info(commit);
+    core.info(JSON.stringify(commit));
 
 })().catch((error) => {
     core.setFailed(error);
