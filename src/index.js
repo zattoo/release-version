@@ -22,8 +22,8 @@ const github = require('@actions/github');
     core.info(`Head commit: ${head}`);
 
     console.log('octokit', octokit);
-    console.log('rest', rest);
-    console.log('repos', repos);
+    console.log('rest', octokit.rest);
+    console.log('repos', octokit.rest.repos);
 
     const compare = await octokit.rest.repos.compareCommits({
         base,
