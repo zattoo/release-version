@@ -4396,11 +4396,13 @@ const github = __webpack_require__(469);
 
     console.log('github.context.sha', sha);
 
-    const files = await octokit.rest.repos.getCommit({
+    const files = await octokit.rest.git.getCommit({
         owner,
         repo,
-        ref: sha,
+        commit_sha: sha,
     });
+
+    console.log('files', files);
 
     files.data.map((file) => {
         console.log(file.filename);
