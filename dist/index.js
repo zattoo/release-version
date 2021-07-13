@@ -4401,6 +4401,10 @@ const github = __webpack_require__(469);
     core.info(`Base commit: ${base}`);
     core.info(`Head commit: ${head}`);
 
+    console.log('octokit', octokit);
+    console.log('rest', rest);
+    console.log('repos', repos);
+
     const compare = await octokit.rest.repos.compareCommits({
         base,
         head,
