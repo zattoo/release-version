@@ -17,7 +17,9 @@ const github = require('@actions/github');
         ref: github.context.sha,
     });
 
-    files.data.map((file) => file.filename);
+    files.data.map((file) => {
+        console.log(file.filename);
+    });
 
 })().catch((error) => {
     core.setFailed(error);
