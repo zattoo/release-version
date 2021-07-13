@@ -42,9 +42,9 @@ const quit = (message, exitCode) => {
     }
 
     changelogs.forEach((changelog) => {
-        const {patch} = changelog;
+        const {filename} = changelog;
 
-        let [, project] = patch.split('/');
+        let [, project] = filename.split('/');
 
         core.info(`project ${project}`);
     });
