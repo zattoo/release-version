@@ -21968,13 +21968,16 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            const response = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref: `refs/heads/${releaseBranch}`,
-            });
-
-            console.log(response)
+            try {
+                const response = await octokit.rest.git.getRef({
+                    owner,
+                    repo,
+                    ref: `refs/heads/${releaseBranch}`,
+                });
+                console.log(response)
+            } catch (e) {
+                console.log(e);
+            }
 
             // await octokit.rest.git.createRef({
             //     owner,
