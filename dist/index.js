@@ -23156,26 +23156,27 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             //     sha: releaseSha,
             // });
 
-            const {data: pick} = await octokit.rest.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
-
-            const {data: commit} = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                message: pick.message,
-                tree: pick.tree.sha,
-                author: pick.author,
-            });
+            // const {data: pick} = await octokit.rest.git.getCommit({
+            //     owner,
+            //     repo,
+            //     commit_sha: after,
+            // });
+            //
+            // const {data: commit} = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     message: pick.message,
+            //     tree: pick.tree.sha,
+            //     author: pick.author,
+            //     parents: [github.context.sha],
+            // });
 
             try {
                 const response = await octokit.rest.git.updateRef({
                     owner,
                     repo,
                     ref: `heads/${patchBranch}`,
-                    sha: commit.sha,
+                    sha: after,
                 });
                 console.log(response);
             } catch (error) {
