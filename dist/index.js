@@ -23064,7 +23064,7 @@ const git = async (cmd) => {
         }
     }
 
-    result.exitCode = await exec.exec(`git ${cmd}`, options);
+    result.exitCode = await exec.exec(`git ${cmd}`, [], options);
     result.stdout = stdout.join('');
     result.stderr = stderr.join('');
 
