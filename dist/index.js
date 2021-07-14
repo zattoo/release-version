@@ -21949,25 +21949,39 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
     const release = async (project, item) => {
         const {version} = item;
-        const branch = `release/${project}/${version.slice(0, -2)}`;
-        const url = `https://github.com/zattoo/cactus/tree/${branch}`;
+        const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
+        const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
+        const patchBranch = `release/${project}/${version}`;
 
         if (version[version.length - 1] === 0) {
-            core.info(`Creating release branch ${branch}`);
+            core.info(`Creating release branch ${releaseBranch}`);
 
             try {
                 await octokit.rest.git.createRef({
                     owner,
                     repo,
-                    ref: `refs/heads/${branch}`,
+                    ref: `refs/heads/${releaseBranch}`,
                     sha: after,
                 });
-                core.info(`Success: Branch ${branch} created. See ${url}`);
+                core.info(`Success: Branch ${releaseBranch} created. See ${releaseUrl}`);
             } catch {
-                core.info(`Release ${branch} already exist. See ${url}`);
+                core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
+            const response = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `refs/heads/${releaseBranch}`,
+            });
 
+            console.log(response)
+
+            // await octokit.rest.git.createRef({
+            //     owner,
+            //     repo,
+            //     ref: `refs/heads/${patchBranch}`,
+            //     sha: after,
+            // });
         }
     };
 
