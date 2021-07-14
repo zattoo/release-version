@@ -100,6 +100,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
         const patchBranch = `patch/${project}/${version}`;
 
+        console.log('version', version);
+        console.log('patch', version[version.length - 1]);
+
         if (version[version.length - 1] === 0) {
             core.info(`Creating release branch ${releaseBranch}`);
 
@@ -115,8 +118,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            await exec.exec('git status');
-
             const {data: release} = await octokit.rest.git.getRef({
                 owner,
                 repo,
