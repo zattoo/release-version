@@ -143,6 +143,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
+            await git('status');
+
             const checkout = await git(`checkout ${releaseBranch}`);
 
             console.log('checkout', checkout);
