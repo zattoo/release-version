@@ -76,7 +76,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    const commit = await octokit.rest.repos.getCommit({
+    const commit = await octokit.rest.git.getCommit({
         owner,
         repo,
         ref: after,
