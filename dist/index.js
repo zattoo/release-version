@@ -21882,6 +21882,12 @@ const diff = (changelogBefore, changelogAfter) => {
         const dateBefore = item.date;
         const bodyBefore = item.body;
 
+        console.log('---');
+        console.log(bodyAfter);
+        console.log('-');
+        console.log(bodyBefore);
+        console.log('---');
+
         if (bodyAfter !== bodyBefore) {
             core.info(`${versionAfter} diff detected`);
 
