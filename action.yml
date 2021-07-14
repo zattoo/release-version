@@ -1,21 +1,8 @@
 name: 'Release Version'
-description: 'Cut release at ease'
+description: 'Release Version Manager'
 inputs:
   token:
     required: true
-  version:
-    required: true
-  project:
-    default: ''
-  strategy:
-    required: true
-    default: 'release'
-  production:
-    required: true
-    default: 'production'
-  release-date-format:
-    required: true
-    default: 'DD.MM.YYYY'
 runs:
   using: 'node12'
   main: 'dist/index.js'
