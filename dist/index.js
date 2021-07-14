@@ -21948,7 +21948,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, version) => {
-        core.info(`Releasing release/${project}/${version.version}`);
+        const branch = `release/${project}/${version.version.slice(0, -2)}`;
+
+        core.info(`Releasing ${branch}`);
     };
 
     const analyzeChangelog = async (item) => {
