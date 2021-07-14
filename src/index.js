@@ -16,7 +16,7 @@ const quit = (message, exitCode) => {
 };
 
 const diff = (changelogBefore, changelogAfter) => {
-    const mapBefore = changelogBefore.reduce((result, item) => {
+    const mapBefore = changelogBefore.versions.reduce((result, item) => {
         return {
             ...result,
             [item.version]: item,
