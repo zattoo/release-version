@@ -35,7 +35,7 @@ const diff = (changelogBefore, changelogAfter) => {
 
         if (bodyAfter !== bodyBefore && dateBefore) {
             quit(`Version ${versionAfter} was already released, it cannot be modified.`, 1);
-            core.info('\nIf you want to modify existing version, skip this job with ignore label.');
+            core.warning('\nIf you want to modify existing version, skip this job with ignore label.');
         }
     });
 };
