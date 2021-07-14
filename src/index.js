@@ -45,6 +45,7 @@ const diff = (changelogBefore, changelogAfter) => {
         ref: after,
     });
 
+
     const {files} = commit.data;
 
     if (_.isEmpty(files)) {
