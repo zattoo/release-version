@@ -23141,13 +23141,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            // const {data: release} = await octokit.rest.git.getRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${releaseBranch}`,
-            // });
+            const {data: release} = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${releaseBranch}`,
+            });
 
-            // const releaseSha = release.object.sha;
+            const releaseSha = release.object.sha;
 
             // await octokit.rest.git.createRef({
             //     owner,
@@ -23162,16 +23162,24 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            console.log(cherryPick);
+            const {data: siblingCommit} = await octokit.rest.git.createCommit({
+                owner,
+                repo,
+                tree: cherryPick.tree.sha,
+                author: cherryPick.author,
+                message: cherryPick.message
+            });
 
-            // const {data: siblingCommit} = await octokit.rest.git.createCommit({
-            //     owner,
-            //     repo,
-            //     tree: cherryPick.tree.sha,
-            //     author: cherryPick.author,
-            //     message: cherryPick.message
-            // });
-            //
+            const response = await octokit.repos.merge({
+                owner,
+                repo,
+                head: siblingCommit.sha,
+                base: releaseSha,
+                commit_message: getCommitMessageToSkipCI(`Merge ${commit} into ${releaseSha}`),
+            });
+
+            console.log(response);
+
             // await octokit.rest.git.updateRef({
             //     owner,
             //     repo,
