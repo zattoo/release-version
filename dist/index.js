@@ -21878,20 +21878,13 @@ const diff = (changelogBefore, changelogAfter) => {
             return;
         }
 
-        const versionBefore = item.version;
-        const dateBefore = item.date;
-        const bodyBefore = item.body;
+        const versionBefore = itemBefore.version;
+        const dateBefore = itemBefore.date;
+        const bodyBefore = itemBefore.body;
 
-        console.log('---');
-        console.log(bodyAfter);
-        console.log('-');
-        console.log(bodyBefore);
-        console.log('---');
-
-        if (bodyAfter !== bodyBefore) {
+        if (bodyAfter !== bodyBefore && dateBefore) {
             core.info(`${versionAfter} diff detected`);
-
-            // quit('already released entry was modified', 1);
+            quit('already released entry was modified', 1);
         }
     });
 };
