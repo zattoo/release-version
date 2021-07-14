@@ -124,34 +124,29 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const releaseSha = release.object.sha;
 
-            // await octokit.rest.git.createRef({
-            //     owner,
-            //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: releaseSha,
-            // });
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: releaseSha,
+            });
 
-            try {
-                const response = await octokit.rest.git.updateRef({
-                    owner,
-                    repo,
-                    ref: `heads/${patchBranch}`,
-                    sha: after,
-                    force: true,
-                });
-                console.log(response);
-            } catch (error) {
-                console.log(error);
-            }
+            await octokit.rest.git.updateRef({
+                owner,
+                repo,
+                ref: `heads/${patchBranch}`,
+                sha: after,
+                force: true,
+            });
 
-            // await octokit.rest.pulls.create({
-            //     owner,
-            //     repo,
-            //     title: `🍒 ${version}`,
-            //     body: item.body,
-            //     head: patchBranch,
-            //     base: releaseBranch,
-            // });
+            await octokit.rest.pulls.create({
+                owner,
+                repo,
+                title: `🍒 ${version}`,
+                body: item.body,
+                head: patchBranch,
+                base: releaseBranch,
+            });
         }
     };
 
