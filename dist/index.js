@@ -23149,25 +23149,25 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const releaseSha = release.object.sha;
 
-            // await octokit.rest.git.createRef({
-            //     owner,
-            //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: releaseSha,
-            // });
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: releaseSha,
+            });
 
-            // await octokit.rest.git.updateRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${patchBranch}`,
-            //     sha: after,
-            // });
+            await octokit.rest.git.updateRef({
+                owner,
+                repo,
+                ref: `heads/${patchBranch}`,
+                sha: after,
+            });
 
             await octokit.rest.pulls.create({
                 owner,
                 repo,
-                title: `Release ${version}`,
-                body: 'tbd...',
+                title: `🍒 ${version}`,
+                body: item.body,
                 head: patchBranch,
                 base: releaseBranch,
             });
@@ -23198,14 +23198,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         ]);
 
         const [changelogBefore, changelogAfter] = await Promise.all([
-            await parseChangelog({
-                text: Buffer.from(contentBefore.data.content, 'base64')
-                    .toString()
-            }),
-            await parseChangelog({
-                text: Buffer.from(contentAfter.data.content, 'base64')
-                    .toString()
-            }),
+            await parseChangelog({text: Buffer.from(contentBefore.data.content, 'base64').toString()}),
+            await parseChangelog({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
         ]);
 
         const newVersions = getNewVersions(changelogBefore, changelogAfter);
