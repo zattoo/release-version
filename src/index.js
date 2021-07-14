@@ -95,19 +95,20 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
     const release = async (project, version) => {
         const branch = `release/${project}/${version.version.slice(0, -2)}`;
+        const url = `https://github.com/zattoo/cactus/tree/${branch}`;
 
         core.info(`Releasing ${branch}`);
 
         try {
-            const response = await octokit.rest.git.createRef({
+            await octokit.rest.git.createRef({
                 owner,
                 repo,
                 ref: `refs/heads/${branch}`,
                 sha: after,
             });
-            console.log(response);
-        } catch (e) {
-            console.log('error', e);
+            core.info(`Success: Branch ${branch} created. See ${url}`);
+        } catch {
+            core.info(`${branch} already exist. See ${url}`);
         }
     };
 
