@@ -98,7 +98,7 @@ const diff = (changelogBefore, changelogAfter) => {
         const split = filename.split('/');
         const project = split[split.length - 2];
 
-        core.info(`project ${project}`);
+        core.info(`Analyzing ${project} project...`);
 
         const [contentBefore, contentAfter] = await Promise.all([
             await octokit.rest.repos.getContent({
