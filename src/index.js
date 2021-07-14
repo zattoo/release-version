@@ -118,7 +118,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             await exec.exec('git checkout', [releaseBranch]);
             await exec.exec('git checkout', ['-B', patchBranch]);
             await exec.exec('git cherry-pick', [after]);
-            await exec.exec('git push', [origin, patchBranch]);
+            await exec.exec('git push', ['origin', patchBranch]);
         }
     };
 
