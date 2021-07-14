@@ -1,4 +1,5 @@
 const core = require('@actions/core');
+const exec = require('@actions/exec');
 const github = require('@actions/github');
 const parseChangelog = require('changelog-parser');
 const _ = require('lodash');
@@ -114,36 +115,38 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            const {data: release} = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref: `heads/${releaseBranch}`,
-            });
+            await exec.exec('git status');
 
-            const releaseSha = release.object.sha;
-
-            console.log('releaseSha', releaseSha);
-
-            // await octokit.rest.git.createRef({
+            // const {data: release} = await octokit.rest.git.getRef({
             //     owner,
             //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: releaseSha,
+            //     ref: `heads/${releaseBranch}`,
             // });
-
-            const {data: commit} = await octokit.rest.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
-
-            const response = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                message: commit.message,
-                tree: commit.tree.sha,
-                author: commit.author,
-            })
+            //
+            // const releaseSha = release.object.sha;
+            //
+            // console.log('releaseSha', releaseSha);
+            //
+            // // await octokit.rest.git.createRef({
+            // //     owner,
+            // //     repo,
+            // //     ref: `refs/heads/${patchBranch}`,
+            // //     sha: releaseSha,
+            // // });
+            //
+            // const {data: commit} = await octokit.rest.git.getCommit({
+            //     owner,
+            //     repo,
+            //     commit_sha: after,
+            // });
+            //
+            // const response = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     message: commit.message,
+            //     tree: commit.tree.sha,
+            //     author: commit.author,
+            // })
 
             console.log(response);
         }

@@ -25,6 +25,7 @@
     "homepage": "https://github.com/zattoo/release-version#readme",
     "dependencies": {
         "@actions/core": "1.4.0",
+        "@actions/exec": "1.1.0",
         "@actions/github": "5.0.0",
         "changelog-parser": "^2.8.0"
     },
