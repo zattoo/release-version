@@ -115,7 +115,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            await exec.exec('git config user.name');
+            await exec.exec(`git checkout -b ${patchBranch}`);
+            await exec.exec('git status');
         }
     };
 
