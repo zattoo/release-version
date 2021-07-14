@@ -94,9 +94,21 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, version) => {
-        const branch = `release/${project}/${version.version.slice(0, -2)}`;
+        const ref = `release/${project}/${version.version.slice(0, -2)}`;
 
-        core.info(`Releasing ${branch}`);
+        core.info(`Releasing ${ref}`);
+
+        try {
+            const response = await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref,
+                sha: after,
+            });
+            console.log(response);
+        } catch (e) {
+            console.log('error', e);
+        }
     };
 
     const analyzeChangelog = async (item) => {
