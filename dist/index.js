@@ -23140,40 +23140,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            await exec.exec('git status');
-
-            // const {data: release} = await octokit.rest.git.getRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${releaseBranch}`,
-            // });
-            //
-            // const releaseSha = release.object.sha;
-            //
-            // console.log('releaseSha', releaseSha);
-            //
-            // // await octokit.rest.git.createRef({
-            // //     owner,
-            // //     repo,
-            // //     ref: `refs/heads/${patchBranch}`,
-            // //     sha: releaseSha,
-            // // });
-            //
-            // const {data: commit} = await octokit.rest.git.getCommit({
-            //     owner,
-            //     repo,
-            //     commit_sha: after,
-            // });
-            //
-            // const response = await octokit.rest.git.createCommit({
-            //     owner,
-            //     repo,
-            //     message: commit.message,
-            //     tree: commit.tree.sha,
-            //     author: commit.author,
-            // })
-
-            console.log(response);
+            await exec.exec('git config user.name');
         }
     };
 
