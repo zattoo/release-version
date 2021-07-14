@@ -21995,7 +21995,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 owner,
                 repo,
                 message: commit.message,
-                tree: commit.tree,
+                tree: commit.tree.sha,
                 author: commit.author,
             })
 
