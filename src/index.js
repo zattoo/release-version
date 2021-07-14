@@ -137,20 +137,20 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            const {data: cherry} = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                message: pick.message,
-                tree: pick.tree.sha,
-                author: pick.author,
-            });
+            // const {data: cherry} = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     message: pick.message,
+            //     tree: pick.tree.sha,
+            //     author: pick.author,
+            // });
 
             try {
                 const response = await octokit.rest.git.updateRef({
                     owner,
                     repo,
-                    ref: `heads/${patchBranch}`,
-                    sha: cherry.tree.sha,
+                    ref: patchBranch,
+                    sha: pick.tree.sha,
                 });
                 console.log(response);
             } catch (error) {
