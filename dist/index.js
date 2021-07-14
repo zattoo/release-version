@@ -23170,14 +23170,18 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 author: pick.author,
             });
 
-            const response = await octokit.rest.git.updateRef({
-                owner,
-                repo,
-                ref: patchBranch,
-                sha: cherry.tree.sha,
-            });
+            try {
+                const response = await octokit.rest.git.updateRef({
+                    owner,
+                    repo,
+                    ref: `heads/${patchBranch}`,
+                    sha: cherry.tree.sha,
+                });
+                console.log(response);
+            } catch (error) {
+                console.log(error);
+            }
 
-            console.log(response);
 
             // octokit.rest.pulls.create({
             //     owner,
