@@ -145,6 +145,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 author: pick.author,
             });
 
+            console.log('cherry');
+            console.log(cherry);
+
             const response = await octokit.rest.git.updateRef({
                 owner,
                 repo,
