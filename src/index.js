@@ -163,14 +163,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 force: true,
             });
 
-            // await octokit.rest.pulls.create({
-            //     owner,
-            //     repo,
-            //     title: `🍒 ${version}`,
-            //     body: item.body,
-            //     head: patchBranch,
-            //     base: releaseBranch,
-            // });
+            await octokit.rest.pulls.create({
+                owner,
+                repo,
+                title: `🍒 ${version}`,
+                body: item.body,
+                head: patchBranch,
+                base: releaseBranch,
+            });
         }
     };
 

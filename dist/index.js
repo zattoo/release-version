@@ -23170,7 +23170,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            const siblingCommit = await octokit.rest.git.createCommit({
+            const {data: siblingCommit} = await octokit.rest.git.createCommit({
                 owner,
                 repo,
                 tree: cherryPick.tree.sha,
@@ -23184,18 +23184,18 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 owner,
                 repo,
                 ref: `heads/${patchBranch}`,
-                sha: after,
+                sha: siblingCommit.tree.sha,
                 force: true,
             });
 
-            // await octokit.rest.pulls.create({
-            //     owner,
-            //     repo,
-            //     title: `🍒 ${version}`,
-            //     body: item.body,
-            //     head: patchBranch,
-            //     base: releaseBranch,
-            // });
+            await octokit.rest.pulls.create({
+                owner,
+                repo,
+                title: `🍒 ${version}`,
+                body: item.body,
+                head: patchBranch,
+                base: releaseBranch,
+            });
         }
     };
 
