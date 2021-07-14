@@ -94,8 +94,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         exit('No changelog changes', 0);
     }
 
-    console.log('here');
-
     const release = async (project, item) => {
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
@@ -153,15 +151,15 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 console.log(error);
             }
 
-            const commit = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                tree: cherryPick.tree.sha,
-                author: cherryPick.author,
-                message: cherryPick.message
-            });
-
-            console.log('commit', commit);
+            // const siblingCommit = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     tree: cherryPick.tree.sha,
+            //     author: cherryPick.author,
+            //     message: cherryPick.message
+            // });
+            //
+            // console.log('siblingCommit', siblingCommit);
 
             // await octokit.rest.git.updateRef({
             //     owner,
