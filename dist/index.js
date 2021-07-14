@@ -23086,10 +23086,10 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 };
 
 (async () => {
-    console.log('not found?');
-
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
+
+    console.log(1);
 
     const {context} = github;
     const {payload} = context;
@@ -23103,11 +23103,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    const commit = await octokit.rest.git.getCommit({
-        owner,
-        repo,
-        ref: after,
-    });
+    let commit;
+
+    try {
+        commit = await octokit.rest.git.getCommit({
+            owner,
+            repo,
+            ref: after,
+        });
+    } catch (e) {
+        console.log(e);
+    }
 
     const {files} = commit.data;
 
