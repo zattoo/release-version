@@ -145,7 +145,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 message: cherryPick.message
             });
 
-            const response = await octokit.repos.merge({
+            const response = await octokit.rest.repos.merge({
                 owner,
                 repo,
                 head: siblingCommit.sha,
