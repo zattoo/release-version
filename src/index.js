@@ -61,6 +61,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 };
 
 (async () => {
+    console.log('not found?');
+
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
 
