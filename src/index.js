@@ -131,11 +131,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: releaseSha,
             });
 
-            const {data: cherryPick} = await octokit.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
+            try {
+                const {data: cherryPick} = await octokit.git.getCommit({
+                    owner,
+                    repo,
+                    commit_sha: after,
+                });
+
+                console.log(cherryPick);
+            } catch (error) {
+                console.log(error);
+            }
 
             const commit = await octokit.rest.git.createCommit({
                 owner,
