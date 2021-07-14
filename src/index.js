@@ -143,6 +143,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 message: pick.message,
                 tree: pick.tree.sha,
                 author: pick.author,
+                parents: [github.context.sha],
             });
 
             try {
