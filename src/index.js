@@ -40,9 +40,9 @@ const diff = (changelogBefore, changelogAfter) => {
         }
 
         if (
-            (bodyAfter !== bodyBefore && dateBefore) ||
-            (dateAfter !== dateBefore) ||
-            (versionAfter !== versionBefore)
+            (bodyBefore && bodyBefore !== bodyAfter) ||
+            (dateBefore && dateBefore !== dateAfter) ||
+            (versionBefore && versionBefore !== versionAfter)
         ) {
             console.log('bodyAfter', bodyAfter);
             console.log('bodyBefore', bodyBefore);
