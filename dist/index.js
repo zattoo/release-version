@@ -21972,7 +21972,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const response = await octokit.rest.git.getRef({
                     owner,
                     repo,
-                    ref: `refs/heads/${releaseBranch}`,
+                    ref: `heads/${releaseBranch}`,
                 });
                 console.log(response)
             } catch (e) {
