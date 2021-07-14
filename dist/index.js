@@ -23119,6 +23119,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         exit('No changelog changes', 0);
     }
 
+    console.log('here');
+
     const release = async (project, item) => {
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
