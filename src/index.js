@@ -20,22 +20,22 @@ const diff = (changelogBefore, changelogAfter) => {
         const versionAfter = item.version;
         const dateAfter = item.date;
         const bodyAfter = item.body;
-
         const itemBefore = changelogBefore.versions[i];
-
-        // new item added
-        // todo
-        if (!itemBefore) {
-            return;
-        }
-
         const versionBefore = itemBefore.version;
         const dateBefore = itemBefore.date;
         const bodyBefore = itemBefore.body;
 
-        if (bodyAfter !== bodyBefore && dateBefore) {
+        if (!dateBefore && dateAfter) {
+            core.info(`new ${versionAfter} candidate detected, preparing release...`)
+            return;
+        }
+
+        if (
+            (bodyAfter !== bodyBefore && dateBefore) ||
+            (dateAfter !== dateBefore) ||
+            (versionAfter !== versionBefore)
+        ) {
             quit(`Version ${versionAfter} was already released, it cannot be modified.`, 1);
-            core.warning('\nIf you want to modify existing version, skip this job with ignore label.');
         }
     });
 };
