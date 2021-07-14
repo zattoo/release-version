@@ -21859,6 +21859,8 @@ const _ = __webpack_require__(557);
 
 // todo: add ignore label
 
+let foundSomething = false;
+
 const quit = (message, exitCode) => {
     if (exitCode === 1) {
         core.error(message);
@@ -21890,6 +21892,7 @@ const diff = (changelogBefore, changelogAfter) => {
 
         if (!dateBefore && dateAfter) {
             core.info(`new ${versionAfter} candidate detected, preparing release...`)
+            foundSomething = true;
             return;
         }
 
@@ -21975,6 +21978,10 @@ const diff = (changelogBefore, changelogAfter) => {
     };
 
     await Promise.all(changelogs.map(loop));
+
+    if (!foundSomething) {
+        quit('No release candidates were found', 0);
+    }
 })().catch((error) => {
     quit(error, 1);
 });
