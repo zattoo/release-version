@@ -116,8 +116,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            console.log('get release branch sha:');
-
             const {data: release} = await octokit.rest.git.getRef({
                 owner,
                 repo,
@@ -126,18 +124,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const releaseSha = release.object.sha;
 
-            console.log(releaseSha);
-
-            console.log('create patch branch');
-
             await octokit.rest.git.createRef({
                 owner,
                 repo,
                 ref: `refs/heads/${patchBranch}`,
                 sha: releaseSha,
             });
-
-            console.log('get commit for cherry pick');
 
             const {data: cherryPick} = await octokit.rest.git.getCommit({
                 owner,
@@ -152,8 +144,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 author: cherryPick.author,
                 message: cherryPick.message
             });
-
-            console.log('siblingCommit', siblingCommit);
 
             await octokit.rest.git.updateRef({
                 owner,
