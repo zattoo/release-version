@@ -23089,8 +23089,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
 
-    console.log(1);
-
     const {context} = github;
     const {payload} = context;
 
@@ -23103,17 +23101,11 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
 
-    let commit;
-
-    try {
-        commit = await octokit.rest.git.getCommit({
-            owner,
-            repo,
-            ref: after,
-        });
-    } catch (e) {
-        console.log(e);
-    }
+    const commit = await octokit.rest.repos.getCommit({
+        owner,
+        repo,
+        ref: after,
+    });
 
     const {files} = commit.data;
 
@@ -23184,15 +23176,15 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 console.log(error);
             }
 
-            // const siblingCommit = await octokit.rest.git.createCommit({
-            //     owner,
-            //     repo,
-            //     tree: cherryPick.tree.sha,
-            //     author: cherryPick.author,
-            //     message: cherryPick.message
-            // });
-            //
-            // console.log('siblingCommit', siblingCommit);
+            const siblingCommit = await octokit.rest.git.createCommit({
+                owner,
+                repo,
+                tree: cherryPick.tree.sha,
+                author: cherryPick.author,
+                message: cherryPick.message
+            });
+
+            console.log('siblingCommit', siblingCommit);
 
             // await octokit.rest.git.updateRef({
             //     owner,
