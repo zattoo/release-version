@@ -23126,7 +23126,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const patchBranch = `patch/${project}/${version}`;
 
         if (Number(version[version.length - 1]) === 0) {
-            core.info(`Creating release branch ${releaseBranch}`);
+            core.info(`Creating release branch ${releaseBranch}...`);
 
             try {
                 await octokit.rest.git.createRef({
@@ -23135,9 +23135,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                     ref: `refs/heads/${releaseBranch}`,
                     sha: after,
                 });
-                core.info(`Success: Branch ${releaseBranch} created. See ${releaseUrl}`);
+                core.info(`Success: Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
             } catch {
-                core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
+                core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
             const {data: release} = await octokit.rest.git.getRef({
