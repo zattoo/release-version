@@ -21865,23 +21865,27 @@ const quit = (message, exitCode) => {
 };
 
 const diff = (changelogBefore, changelogAfter) => {
-    changelogAfter.versions.forEach((item, i) => {
+    changelogAfter.versions.reverse().forEach((item, i) => {
         const versionAfter = item.version;
         const dateAfter = item.date;
-        const bodyAfter = item.date;
+        const bodyAfter = item.body;
 
         const itemBefore = changelogBefore.versions[i];
 
+        // new item added
+        // todo
         if (!itemBefore) {
-            return; // new entry added
+            return;
         }
 
         const versionBefore = item.version;
         const dateBefore = item.date;
-        const bodyBefore = item.date;
+        const bodyBefore = item.body;
 
-        if (bodyAfter !== bodyBefore && dateBefore) {
-            quit('already released entry was modified', 1);
+        if (bodyAfter !== bodyBefore) {
+            core.info(`${versionAfter} diff detected`);
+
+            // quit('already released entry was modified', 1);
         }
     });
 };
