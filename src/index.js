@@ -99,8 +99,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
         const patchBranch = `patch/${project}/${version}`;
+        const first = Number(version[version.length - 1]) === 0;
 
-        if (Number(version[version.length - 1]) === 0) {
+        if (first) {
             core.info(`Creating release branch ${releaseBranch}...`);
 
             try {
@@ -138,17 +139,22 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            console.log(commit);
+            const response = await octokit.rest.git.createCommit({
+                owner,
+                repo,
+                message: commit.message,
+                tree: commit.tree.sha,
+                author: commit.author,
+            })
 
-            // const response = await octokit.rest.git.createCommit({
+            console.log(response);
+
+            // octokit.rest.pulls.create({
             //     owner,
             //     repo,
-            //     message: commit.message,
-            //     tree: commit.tree.sha,
-            //     author: commit.author,
-            // })
-
-            // console.log(response);
+            //     head,
+            //     base,
+            // });
         }
     };
 
