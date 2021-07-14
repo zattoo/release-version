@@ -23184,7 +23184,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 owner,
                 repo,
                 ref: `heads/${patchBranch}`,
-                sha: siblingCommit.tree.sha,
+                sha: siblingCommit.sha,
                 force: true,
             });
 
