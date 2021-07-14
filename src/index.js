@@ -155,14 +155,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             console.log('siblingCommit', siblingCommit);
 
-            // await octokit.rest.git.updateRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${patchBranch}`,
-            //     sha: after,
-            //     force: true,
-            // });
-            //
+            await octokit.rest.git.updateRef({
+                owner,
+                repo,
+                ref: `heads/${patchBranch}`,
+                sha: after,
+                force: true,
+            });
+
             // await octokit.rest.pulls.create({
             //     owner,
             //     repo,
