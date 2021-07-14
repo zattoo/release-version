@@ -21857,6 +21857,8 @@ const github = __webpack_require__(469);
 const parseChangelog = __webpack_require__(734);
 const _ = __webpack_require__(557);
 
+// todo: add ignore label
+
 const quit = (message, exitCode) => {
     core.info(message);
     process.exit(exitCode);
@@ -21864,17 +21866,23 @@ const quit = (message, exitCode) => {
 
 const diff = (changelogBefore, changelogAfter) => {
     changelogAfter.versions.forEach((item, i) => {
-        console.log('after', item.version, item.date);
+        const versionAfter = item.version;
+        const dateAfter = item.date;
+        const bodyAfter = item.date;
 
         const itemBefore = changelogBefore.versions[i];
 
         if (!itemBefore) {
-            return;
+            return; // new entry added
         }
 
-        console.log('before', itemBefore.version, itemBefore.date);
+        const versionBefore = item.version;
+        const dateBefore = item.date;
+        const bodyBefore = item.date;
 
-        console.log('---');
+        if (bodyAfter !== bodyBefore && dateBefore) {
+            quit('already released entry was modified', 1);
+        }
     });
 };
 

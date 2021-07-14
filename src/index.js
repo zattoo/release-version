@@ -3,6 +3,8 @@ const github = require('@actions/github');
 const parseChangelog = require('changelog-parser');
 const _ = require('lodash');
 
+// todo: add ignore label
+
 const quit = (message, exitCode) => {
     core.info(message);
     process.exit(exitCode);
@@ -10,17 +12,23 @@ const quit = (message, exitCode) => {
 
 const diff = (changelogBefore, changelogAfter) => {
     changelogAfter.versions.forEach((item, i) => {
-        console.log('after', item.version, item.date);
+        const versionAfter = item.version;
+        const dateAfter = item.date;
+        const bodyAfter = item.date;
 
         const itemBefore = changelogBefore.versions[i];
 
         if (!itemBefore) {
-            return;
+            return; // new entry added
         }
 
-        console.log('before', itemBefore.version, itemBefore.date);
+        const versionBefore = item.version;
+        const dateBefore = item.date;
+        const bodyBefore = item.date;
 
-        console.log('---');
+        if (bodyAfter !== bodyBefore && dateBefore) {
+            quit('already released entry was modified', 1);
+        }
     });
 };
 
@@ -44,7 +52,6 @@ const diff = (changelogBefore, changelogAfter) => {
         repo,
         ref: after,
     });
-
 
     const {files} = commit.data;
 
