@@ -35,6 +35,13 @@ const diff = (changelogBefore, changelogAfter) => {
             (dateAfter !== dateBefore) ||
             (versionAfter !== versionBefore)
         ) {
+            console.log('bodyAfter', bodyAfter);
+            console.log('bodyBefore', bodyBefore);
+            console.log('dateAfter', dateAfter);
+            console.log('dateBefore', dateBefore);
+            console.log('versionAfter', versionAfter);
+            console.log('versionBefore', versionBefore);
+
             quit(`Version ${versionAfter} was already released, it cannot be modified.`, 1);
         }
     });
