@@ -23043,6 +23043,35 @@ const exit = (message, exitCode) => {
     process.exit(exitCode);
 };
 
+const git = async (args, ignoreReturnCode) => {
+    const result = {
+        stdout: '',
+        stderr: '',
+        exitCode: 0,
+    };
+
+    const stdout = [];
+    const stderr = [];
+
+    const options = {
+        ignoreReturnCode,
+        listeners: {
+            stdout: (data) => {
+                stdout.push(data.toString());
+            },
+            stderr: (data) => {
+                stderr.push(data.toString());
+            }
+        }
+    }
+
+    result.exitCode = await exec.exec('git', args, options);
+    result.stdout = stdout.join('');
+    result.stderr = stderr.join('');
+
+    return result;
+}
+
 const getNewVersions = (changelogBefore, changelogAfter) => {
     let newVersions = [];
 
@@ -23140,10 +23169,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            await exec.exec('git checkout', [releaseBranch]);
-            await exec.exec('git checkout', ['-B', patchBranch]);
-            await exec.exec('git cherry-pick', [after]);
-            await exec.exec('git push', ['origin', patchBranch]);
+            const checkout = await git('checkout', [releaseBranch]);
+
+            console.log('checkout', checkout);
+
+            await exec.exec('checkout', ['-B', patchBranch]);
+            await exec.exec('cherry-pick', [after]);
+            await exec.exec('push', ['origin', patchBranch]);
         }
     };
 
