@@ -97,7 +97,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
-        const patchBranch = `release/${project}/${version}`;
+        const patchBranch = `patch/${project}/${version}`;
 
         if (version[version.length - 1] === 0) {
             core.info(`Creating release branch ${releaseBranch}`);
