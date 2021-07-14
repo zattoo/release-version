@@ -21893,7 +21893,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const bodyBefore = itemBefore.body;
 
         if (!dateBefore && dateAfter) {
-            core.info(`new ${versionAfter} candidate detected, preparing release...`)
+            core.info(`New ${versionAfter} candidate detected, preparing release...`)
             foundSomething = true;
             newVersions.push(item);
         }
@@ -21947,22 +21947,27 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         exit('No changelog changes', 0);
     }
 
-    const release = async (project, version) => {
-        const branch = `release/${project}/${version.version.slice(0, -2)}`;
+    const release = async (project, item) => {
+        const {version} = item;
+        const branch = `release/${project}/${version.slice(0, -2)}`;
         const url = `https://github.com/zattoo/cactus/tree/${branch}`;
 
-        core.info(`Releasing ${branch}`);
+        if (version[version.length - 1] === 0) {
+            core.info(`Creating release branch ${branch}`);
 
-        try {
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${branch}`,
-                sha: after,
-            });
-            core.info(`Success: Branch ${branch} created. See ${url}`);
-        } catch {
-            core.info(`${branch} already exist. See ${url}`);
+            try {
+                await octokit.rest.git.createRef({
+                    owner,
+                    repo,
+                    ref: `refs/heads/${branch}`,
+                    sha: after,
+                });
+                core.info(`Success: Branch ${branch} created. See ${url}`);
+            } catch {
+                core.info(`Release ${branch} already exist. See ${url}`);
+            }
+        } else {
+
         }
     };
 
