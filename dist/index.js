@@ -23043,34 +23043,6 @@ const exit = (message, exitCode) => {
     process.exit(exitCode);
 };
 
-const git = async (cmd) => {
-    const result = {
-        stdout: '',
-        stderr: '',
-        exitCode: 0,
-    };
-
-    const stdout = [];
-    const stderr = [];
-
-    const options = {
-        listeners: {
-            stdout: (data) => {
-                stdout.push(data.toString());
-            },
-            stderr: (data) => {
-                stderr.push(data.toString());
-            }
-        }
-    }
-
-    result.exitCode = await exec.exec(`git ${cmd}`, [], options);
-    result.stdout = stdout.join('');
-    result.stderr = stderr.join('');
-
-    return result;
-}
-
 const getNewVersions = (changelogBefore, changelogAfter) => {
     let newVersions = [];
 
@@ -23168,17 +23140,42 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            await git('status');
+            await exec.exec('git status');
 
-            const checkout = await git(`checkout ${releaseBranch}`);
+            const {data: release} = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${releaseBranch}`,
+            });
 
-            console.log('checkout', checkout);
+            const releaseSha = release.object.sha;
 
-            await git(`checkout -b ${patchBranch}`);
+            console.log('releaseSha', releaseSha);
 
-            await git(`cherry-pick ${after}`);
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: releaseSha,
+            });
 
-            await git(`push origin ${patchBranch}`);
+            const {data: commit} = await octokit.rest.git.getCommit({
+                owner,
+                repo,
+                commit_sha: after,
+            });
+
+            console.log(commit);
+
+            // const response = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     message: commit.message,
+            //     tree: commit.tree.sha,
+            //     author: commit.author,
+            // })
+
+            // console.log(response);
         }
     };
 
