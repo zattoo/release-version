@@ -21948,15 +21948,15 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, version) => {
-        const ref = `release/${project}/${version.version.slice(0, -2)}`;
+        const branch = `release/${project}/${version.version.slice(0, -2)}`;
 
-        core.info(`Releasing ${ref}`);
+        core.info(`Releasing ${branch}`);
 
         try {
             const response = await octokit.rest.git.createRef({
                 owner,
                 repo,
-                ref,
+                ref: `refs/heads/${branch}`,
                 sha: after,
             });
             console.log(response);
