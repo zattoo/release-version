@@ -21897,9 +21897,11 @@ const diff = (changelogBefore, changelogAfter) => {
         }
 
         if (
-            (bodyBefore && bodyBefore !== bodyAfter) ||
-            (dateBefore && dateBefore !== dateAfter) ||
-            (versionBefore && versionBefore !== versionAfter)
+            dateBefore && (
+                (bodyBefore !== bodyAfter) ||
+                (dateBefore !== dateAfter) ||
+                (versionBefore !== versionAfter)
+            )
         ) {
             console.log('bodyAfter', bodyAfter);
             console.log('bodyBefore', bodyBefore);
@@ -21937,13 +21939,13 @@ const diff = (changelogBefore, changelogAfter) => {
     const {files} = commit.data;
 
     if (_.isEmpty(files)) {
-        quit('no changes', 0);
+        quit('No changes', 0);
     }
 
     const changelogs = files.filter((file) => file.filename.includes('CHANGELOG.md'));
 
     if (_.isEmpty(changelogs)) {
-        quit('no changelog changes', 0);
+        quit('No changelog changes', 0);
     }
 
     const loop = async (item) => {
