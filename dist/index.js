@@ -21870,11 +21870,20 @@ const quit = (message, exitCode) => {
 };
 
 const diff = (changelogBefore, changelogAfter) => {
-    changelogAfter.versions.reverse().forEach((item, i) => {
+    const mapBefore = changelogBefore.reduce((result, item) => {
+        return {
+            ...result,
+            [item.version]: item,
+        };
+    }, {});
+
+    changelogAfter.versions.forEach((item) => {
         const versionAfter = item.version;
         const dateAfter = item.date;
         const bodyAfter = item.body;
-        const itemBefore = changelogBefore.versions[i];
+
+        const itemBefore = mapBefore[versionAfter] || {};
+
         const versionBefore = itemBefore.version;
         const dateBefore = itemBefore.date;
         const bodyBefore = itemBefore.body;
