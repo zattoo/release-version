@@ -114,13 +114,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            const refResponse = await octokit.rest.git.getRef({
+            const {data: release} = await octokit.rest.git.getRef({
                 owner,
                 repo,
                 ref: `heads/${releaseBranch}`,
             });
 
-            const releaseSha = refResponse.data.object.sha;
+            const releaseSha = release.object.sha;
 
             console.log('releaseSha', releaseSha);
 
@@ -131,13 +131,21 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             //     sha: releaseSha,
             // });
 
-            const commitResponse = await octokit.rest.git.getCommit({
+            const {data: commit} = await octokit.rest.git.getCommit({
                 owner,
                 repo,
                 commit_sha: after,
             });
 
-            console.log(commitResponse);
+            const response = await octokit.rest.git.createCommit({
+                owner,
+                repo,
+                message: commit.message,
+                tree: commit.tree,
+                author: commit.author,
+            })
+
+            console.log(response);
         }
     };
 
