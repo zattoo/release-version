@@ -21869,9 +21869,16 @@ const quit = (message, exitCode) => {
     const {context} = github;
 
     const {
-        sha: current_sha,
+        sha,
         payload
     } = context;
+
+    const before = payload.before;
+    const after = payload.after;
+
+    console.log('before', before);
+    console.log('after', after);
+    console.log('sha', sha);
 
     const {repository} = payload;
 
@@ -21881,7 +21888,7 @@ const quit = (message, exitCode) => {
     const commit = await octokit.rest.repos.getCommit({
         owner,
         repo,
-        ref: current_sha,
+        ref: sha,
     });
 
     const {files} = commit.data;
@@ -21896,7 +21903,7 @@ const quit = (message, exitCode) => {
         quit('no changelog changes', 0);
     }
 
-    const proceed = async (item) => {
+    const loop = async (item) => {
         const {filename} = item;
 
         const split = filename.split('/');
@@ -21908,15 +21915,13 @@ const quit = (message, exitCode) => {
             owner,
             repo,
             path: filename,
-            ref: current_sha,
+            ref: sha,
         });
 
-        const changelog = await parseChangelog({text: Buffer.from(content.data.content, 'base64').toString()})
-
-        core.info(JSON.stringify(changelog));
+        const changelog = await parseChangelog({text: Buffer.from(content.data.content, 'base64').toString()});
     };
 
-    await Promise.all(changelogs.map(proceed));
+    await Promise.all(changelogs.map(loop));
 })().catch((error) => {
     quit(error, 1);
 });
