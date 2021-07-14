@@ -8,25 +8,33 @@ const quit = (message, exitCode) => {
     process.exit(exitCode);
 };
 
+const diff = (changelogBefore, changelogAfter) => {
+    changelogAfter.versions.forEach((item, i) => {
+        console.log('after', item.version, item.date);
+
+        const itemBefore = changelogBefore.versions[i];
+
+        if (!itemBefore) {
+            return;
+        }
+
+        console.log('before', itemBefore.version, itemBefore.date);
+
+        console.log('---');
+    });
+};
+
 (async () => {
     const token = core.getInput('token', {required: true});
     const octokit = github.getOctokit(token);
 
     const {context} = github;
-
+    const {payload} = context;
     const {
-        sha,
-        payload
-    } = context;
-
-    const before = payload.before;
-    const after = payload.after;
-
-    console.log('before', before);
-    console.log('after', after);
-    console.log('sha', sha);
-
-    const {repository} = payload;
+        after,
+        before,
+        repository,
+    } = payload;
 
     const repo = repository.name;
     const owner = repository.full_name.split('/')[0];
@@ -34,7 +42,7 @@ const quit = (message, exitCode) => {
     const commit = await octokit.rest.repos.getCommit({
         owner,
         repo,
-        ref: sha,
+        ref: after,
     });
 
     const {files} = commit.data;
@@ -57,14 +65,27 @@ const quit = (message, exitCode) => {
 
         core.info(`project ${project}`);
 
-        const content = await octokit.rest.repos.getContent({
-            owner,
-            repo,
-            path: filename,
-            ref: sha,
-        });
+        const [contentBefore, contentAfter] = await Promise.all([
+            await octokit.rest.repos.getContent({
+                owner,
+                repo,
+                path: filename,
+                ref: before,
+            }),
+            await octokit.rest.repos.getContent({
+                owner,
+                repo,
+                path: filename,
+                ref: after,
+            }),
+        ]);
 
-        const changelog = await parseChangelog({text: Buffer.from(content.data.content, 'base64').toString()});
+        const [changelogBefore, changelogAfter] = await Promise.all([
+            await parseChangelog({text: Buffer.from(contentBefore.data.content, 'base64').toString()}),
+            await parseChangelog({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
+        ]);
+
+        diff(changelogBefore, changelogAfter);
     };
 
     await Promise.all(changelogs.map(loop));
