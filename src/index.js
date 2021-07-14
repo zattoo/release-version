@@ -150,7 +150,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 repo,
                 head: siblingCommit.sha,
                 base: releaseSha,
-                commit_message: getCommitMessageToSkipCI(`Merge ${commit} into ${releaseSha}`),
+                commit_message: `Merge ${commit} into ${releaseSha}`,
             });
 
             console.log(response);
