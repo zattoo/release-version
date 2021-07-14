@@ -21861,7 +21861,7 @@ const _ = __webpack_require__(557);
 
 let foundSomething = false;
 
-const quit = (message, exitCode) => {
+const exit = (message, exitCode) => {
     if (exitCode === 1) {
         core.error(message);
     } else {
@@ -21871,7 +21871,9 @@ const quit = (message, exitCode) => {
     process.exit(exitCode);
 };
 
-const diff = (changelogBefore, changelogAfter) => {
+const getNewVersions = (changelogBefore, changelogAfter) => {
+    let newVersions = [];
+
     const mapBefore = changelogBefore.versions.reduce((result, item) => {
         return {
             ...result,
@@ -21893,7 +21895,7 @@ const diff = (changelogBefore, changelogAfter) => {
         if (!dateBefore && dateAfter) {
             core.info(`new ${versionAfter} candidate detected, preparing release...`)
             foundSomething = true;
-            return;
+            newVersions.push(item);
         }
 
         if (
@@ -21903,16 +21905,12 @@ const diff = (changelogBefore, changelogAfter) => {
                 (versionBefore !== versionAfter)
             )
         ) {
-            console.log('bodyAfter', bodyAfter);
-            console.log('bodyBefore', bodyBefore);
-            console.log('dateAfter', dateAfter);
-            console.log('dateBefore', dateBefore);
-            console.log('versionAfter', versionAfter);
-            console.log('versionBefore', versionBefore);
-
-            quit(`Version ${versionAfter} was already released, it cannot be modified.`, 1);
+            exit(`Version ${versionAfter} was already released, it cannot be modified.`, 1);
         }
+
     });
+
+    return newVersions;
 };
 
 (async () => {
@@ -21921,6 +21919,7 @@ const diff = (changelogBefore, changelogAfter) => {
 
     const {context} = github;
     const {payload} = context;
+
     const {
         after,
         before,
@@ -21939,16 +21938,20 @@ const diff = (changelogBefore, changelogAfter) => {
     const {files} = commit.data;
 
     if (_.isEmpty(files)) {
-        quit('No changes', 0);
+        exit('No changes', 0);
     }
 
     const changelogs = files.filter((file) => file.filename.includes('CHANGELOG.md'));
 
     if (_.isEmpty(changelogs)) {
-        quit('No changelog changes', 0);
+        exit('No changelog changes', 0);
     }
 
-    const loop = async (item) => {
+    const release = async (project, version) => {
+        core.info(`Releasing release/${project}/${version.version}`);
+    };
+
+    const analyzeChangelog = async (item) => {
         const {filename} = item;
 
         const split = filename.split('/');
@@ -21976,16 +21979,20 @@ const diff = (changelogBefore, changelogAfter) => {
             await parseChangelog({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
         ]);
 
-        diff(changelogBefore, changelogAfter);
+        const newVersions = getNewVersions(changelogBefore, changelogAfter);
+
+        if (!_.isEmpty(newVersions)) {
+            await Promise.all(newVersions.map((version) => release(project, version)));
+        }
     };
 
-    await Promise.all(changelogs.map(loop));
+    await Promise.all(changelogs.map(analyzeChangelog));
 
     if (!foundSomething) {
-        quit('No release candidates were found', 0);
+        exit('No release candidates were found', 0);
     }
 })().catch((error) => {
-    quit(error, 1);
+    exit(error, 1);
 });
 
 
