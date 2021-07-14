@@ -14,7 +14,7 @@ const diff = (changelogBefore, changelogAfter) => {
     changelogAfter.versions.forEach((item, i) => {
         const versionAfter = item.version;
         const dateAfter = item.date;
-        const bodyAfter = item.date;
+        const bodyAfter = item.body;
 
         const itemBefore = changelogBefore.versions[i];
 
@@ -24,7 +24,7 @@ const diff = (changelogBefore, changelogAfter) => {
 
         const versionBefore = item.version;
         const dateBefore = item.date;
-        const bodyBefore = item.date;
+        const bodyBefore = item.body;
 
         if (bodyAfter !== bodyBefore && dateBefore) {
             quit('already released entry was modified', 1);
