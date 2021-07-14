@@ -21893,7 +21893,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const bodyBefore = itemBefore.body;
 
         if (!dateBefore && dateAfter) {
-            core.info(`New ${versionAfter} candidate detected, preparing release...`)
+            core.info(`New ${versionAfter} candidate detected, preparing release...`);
             foundSomething = true;
             newVersions.push(item);
         }
@@ -21968,23 +21968,22 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist. See ${releaseUrl}`);
             }
         } else {
-            try {
-                const response = await octokit.rest.git.getRef({
-                    owner,
-                    repo,
-                    ref: `heads/${releaseBranch}`,
-                });
-                console.log(response)
-            } catch (e) {
-                console.log(e);
-            }
+            const response = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${releaseBranch}`,
+            });
 
-            // await octokit.rest.git.createRef({
-            //     owner,
-            //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: after,
-            // });
+            const releaseSha = response.data.object.sha;
+
+            console.log('releaseSha', releaseSha);
+
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: releaseSha,
+            });
         }
     };
 
@@ -22012,8 +22011,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         ]);
 
         const [changelogBefore, changelogAfter] = await Promise.all([
-            await parseChangelog({text: Buffer.from(contentBefore.data.content, 'base64').toString()}),
-            await parseChangelog({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
+            await parseChangelog({
+                text: Buffer.from(contentBefore.data.content, 'base64')
+                    .toString()
+            }),
+            await parseChangelog({
+                text: Buffer.from(contentAfter.data.content, 'base64')
+                    .toString()
+            }),
         ]);
 
         const newVersions = getNewVersions(changelogBefore, changelogAfter);
@@ -22028,9 +22033,10 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     if (!foundSomething) {
         exit('No release candidates were found', 0);
     }
-})().catch((error) => {
-    exit(error, 1);
-});
+})()
+    .catch((error) => {
+        exit(error, 1);
+    });
 
 
 /***/ }),
