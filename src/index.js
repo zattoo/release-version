@@ -122,16 +122,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 ref: `heads/${releaseBranch}`,
             });
 
-            const releaseSha = release.object.sha;
+            // const releaseSha = release.object.sha;
 
-            console.log('releaseSha', releaseSha);
-
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${patchBranch}`,
-                sha: releaseSha,
-            });
+            // await octokit.rest.git.createRef({
+            //     owner,
+            //     repo,
+            //     ref: `refs/heads/${patchBranch}`,
+            //     sha: releaseSha,
+            // });
 
             const {data: commit} = await octokit.rest.git.getCommit({
                 owner,
