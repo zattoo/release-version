@@ -137,6 +137,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                     repo,
                     ref: `heads/${patchBranch}`,
                     sha: after,
+                    force: true,
                 });
                 console.log(response);
             } catch (error) {
