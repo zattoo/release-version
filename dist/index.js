@@ -21860,7 +21860,12 @@ const _ = __webpack_require__(557);
 // todo: add ignore label
 
 const quit = (message, exitCode) => {
-    core.info(message);
+    if (exitCode === 1) {
+        core.error(message);
+    } else {
+        core.info(message);
+    }
+
     process.exit(exitCode);
 };
 
@@ -21883,8 +21888,8 @@ const diff = (changelogBefore, changelogAfter) => {
         const bodyBefore = itemBefore.body;
 
         if (bodyAfter !== bodyBefore && dateBefore) {
-            core.info(`${versionAfter} diff detected`);
-            quit('already released entry was modified', 1);
+            quit(`Version ${versionAfter} was already released, it cannot be modified.`, 1);
+            core.info('\nIf you want to modify existing version, skip this job with ignore label.');
         }
     });
 };
