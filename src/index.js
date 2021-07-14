@@ -131,22 +131,38 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: releaseSha,
             });
 
-            await octokit.rest.git.updateRef({
+            const {data: cherryPick} = await octokit.git.getCommit({
                 owner,
                 repo,
-                ref: `heads/${patchBranch}`,
-                sha: after,
-                force: true,
+                commit_sha: after,
             });
 
-            await octokit.rest.pulls.create({
+            const commit = await octokit.rest.git.createCommit({
                 owner,
                 repo,
-                title: `🍒 ${version}`,
-                body: item.body,
-                head: patchBranch,
-                base: releaseBranch,
+                tree: cherryPick.tree.sha,
+                author: cherryPick.author,
+                message: cherryPick.message
             });
+
+            console.log('commit', commit);
+
+            // await octokit.rest.git.updateRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${patchBranch}`,
+            //     sha: after,
+            //     force: true,
+            // });
+            //
+            // await octokit.rest.pulls.create({
+            //     owner,
+            //     repo,
+            //     title: `🍒 ${version}`,
+            //     body: item.body,
+            //     head: patchBranch,
+            //     base: releaseBranch,
+            // });
         }
     };
 
