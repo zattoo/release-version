@@ -116,26 +116,22 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec.exec(`curl -i -H "Authorization: token ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/installation/repositories`);
-
-            await exec.exec(`git checkout -b ${releaseBranch}`);
-            await exec.exec(`git checkout -b ${patchBranch}`);
-            await exec.exec(`git push origin ${patchBranch}`);
-
             // get release branch
-            // const {data: release} = await octokit.rest.git.getRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${releaseBranch}`,
-            // });
+            const {data: release} = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${releaseBranch}`,
+            });
 
             // branch patch from release
-            // await octokit.rest.git.createRef({
-            //     owner,
-            //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: release.object.sha,
-            // });
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: release.object.sha,
+            });
+
+            await exec.exec(`git status`);
 
             // get commit to cherry pick
             // const {data: commit} = await octokit.rest.git.getCommit({
