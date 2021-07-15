@@ -23147,13 +23147,11 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 ref: `heads/${releaseBranch}`,
             });
 
-            const releaseSha = release.object.sha;
-
-            await octokit.rest.git.createRef({
+            const {data: patch} = await octokit.rest.git.createRef({
                 owner,
                 repo,
                 ref: `refs/heads/${patchBranch}`,
-                sha: releaseSha,
+                sha: release.object.sha,
             });
 
             const {data: cherryPick} = await octokit.rest.git.getCommit({
@@ -23170,7 +23168,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 message: cherryPick.message
             });
 
-            const response = await octokit.rest.git.updateRef({
+            await octokit.rest.git.updateRef({
                 owner,
                 repo,
                 ref: `heads/${patchBranch}`,
@@ -23178,14 +23176,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 force: true,
             });
 
-            console.log(response);
-
             try {
                 const dump = await octokit.rest.repos.merge({
                     owner,
                     repo,
-                    head: response.data.object.sha,
-                    base: releaseSha,
+                    head: patch.object.sha,
+                    base: patch.object.sha,
                 });
                 console.log(dump);
             } catch (e) {
