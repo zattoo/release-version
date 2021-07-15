@@ -23180,17 +23180,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             console.log(response);
 
-            // try {
-            //     await octokit.rest.repos.merge({
-            //         owner,
-            //         repo,
-            //         head: siblingCommit.sha,
-            //         base: releaseSha,
-            //         commit_message: `Merge ${commit} into ${releaseSha}`,
-            //     });
-            // } catch (e) {
-            //     console.log(e);
-            // }
+            try {
+                const dump = await octokit.rest.repos.merge({
+                    owner,
+                    repo,
+                    head: response.data.object.sha,
+                    base: releaseSha,
+                });
+                console.log(dump);
+            } catch (e) {
+                console.log(e);
+            }
 
             // await octokit.rest.pulls.create({
             //     owner,
