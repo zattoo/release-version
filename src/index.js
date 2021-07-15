@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const exec = require('@actions/exec');
+const exec_ = require('@actions/exec');
 const github = require('@actions/github');
 const parseChangelog = require('changelog-parser');
 const _ = require('lodash');
@@ -17,6 +17,25 @@ const exit = (message, exitCode) => {
 
     process.exit(exitCode);
 };
+
+const exec = async (cmd) => {
+    let output = '';
+    let error = '';
+
+    await exec_.exec(cmd, {
+        listeners: {
+            stdout: (data) => {
+                output += data.toString();
+            },
+            stderr: (data) => {
+                error += data.toString();
+            }
+        }
+    });
+
+    console.log(output);
+    console.log(error);
+}
 
 const getNewVersions = (changelogBefore, changelogAfter) => {
     let newVersions = [];
@@ -131,34 +150,36 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: release.object.sha,
             });
 
+            await exec('git status');
+
             // get commit to cherry pick
-            const {data: commit} = await octokit.rest.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
+            // const {data: commit} = await octokit.rest.git.getCommit({
+            //     owner,
+            //     repo,
+            //     commit_sha: after,
+            // });
 
             // create cherry pick
-            const {data: cherry} = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                tree: commit.tree.sha,
-                author: commit.author,
-                message: commit.message,
-                parent: commit.parents[0],
-            });
+            // const {data: cherry} = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     tree: commit.tree.sha,
+            //     author: commit.author,
+            //     message: commit.message,
+            //     parent: commit.parents[0],
+            // });
 
             // commit cherry pick
-            try {
-                await octokit.rest.git.updateRef({
-                    owner,
-                    repo,
-                    ref: `heads/${patchBranch}`,
-                    sha: cherry.sha,
-                });
-            } catch (error) {
-                console.log(error);
-            }
+            // try {
+            //     await octokit.rest.git.updateRef({
+            //         owner,
+            //         repo,
+            //         ref: `heads/${patchBranch}`,
+            //         sha: cherry.sha,
+            //     });
+            // } catch (error) {
+            //     console.log(error);
+            // }
 
             // try {
             //     const dump = await octokit.rest.repos.merge({
