@@ -23145,7 +23145,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git fetch`);
             await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
-            await exec.exec(`git checkout ${patchBranch}`);
+            await exec.exec(`git checkout -b ${patchBranch}`);
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
