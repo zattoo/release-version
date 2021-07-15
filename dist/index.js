@@ -23141,10 +23141,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec.exec(`curl -s -i -H "Authorization: token ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/installation/repositories`);
+            await exec.exec(`curl -s -i -H "Authorization: token ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/installation/repositories > /dev/null`);
 
-            await exec.exec('git config user.name');
-            await exec.exec('git pull');
+            try {
+                await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
+            } catch (error) {
+                console.log(error);
+            }
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
