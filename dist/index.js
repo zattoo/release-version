@@ -23157,28 +23157,27 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             });
 
             // commit to release branch
-            await octokit.rest.git.updateRef({
+            // await octokit.rest.git.updateRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${patchBranch}`,
+            //     sha: after,
+            //     force: true,
+            // });
+
+            const {data: cherryPick} = await octokit.rest.git.getCommit({
                 owner,
                 repo,
-                ref: `heads/${patchBranch}`,
-                sha: after,
-                force: true,
+                commit_sha: after,
             });
 
-            // const {data: cherryPick} = await octokit.rest.git.getCommit({
-            //     owner,
-            //     repo,
-            //     commit_sha: after,
-            // });
-            //
-            // const {data: siblingCommit} = await octokit.rest.git.createCommit({
-            //     owner,
-            //     repo,
-            //     tree: cherryPick.tree.sha,
-            //     author: cherryPick.author,
-            //     message: cherryPick.message
-            // });
-            //
+            const {data: siblingCommit} = await octokit.rest.git.createCommit({
+                owner,
+                repo,
+                tree: cherryPick.tree.sha,
+                author: cherryPick.author,
+                message: cherryPick.message
+            });
 
             //
             // try {
