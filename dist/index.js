@@ -23141,22 +23141,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            console.log('after', after);
-
-            const {data: commit} = await octokit.rest.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
-
-            console.log('commit', commit);
-
             await exec.exec(`git config user.name ${commit.author.name}`);
             await exec.exec(`git config user.email ${commit.author.email}`);
             await exec.exec(`git fetch`);
             await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
             await exec.exec(`git checkout -b ${patchBranch}`);
-            await exec.exec(`git cherry-pick -X ours ${after}`);
+            await exec.exec(`git cherry-pick ${after}`);
             await exec.exec(`git push origin ${patchBranch}`);
 
             await octokit.rest.pulls.create({
