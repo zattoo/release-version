@@ -131,8 +131,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             try {
                 await exec.exec(`git cherry-pick ${after}`);
             } catch (e) {
-                await exec.exec('git cherry-pick --abort');
-                await exec.exec(`it cherry-pick --strategy=recursive -X theirs ${after}`);
+                await exec.exec('git add --all');
+                await exec.exec('git commit -m "Conflict"');
             }
 
             await exec.exec(`git push origin ${patchBranch}`);
