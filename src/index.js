@@ -116,9 +116,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec.exec(`curl -i \\
--H "Authorization: token ${core.getInput('installation_token', {required: true})}" \\
--H "Accept: application/vnd.github.v3+json" \\
+            await exec.exec(`curl -i
+-H "Authorization: token ${core.getInput('installation_token', {required: true})}"
+-H "Accept: application/vnd.github.v3+json"
 https://api.github.com/installation/repositories`);
 
             await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
