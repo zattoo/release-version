@@ -23141,6 +23141,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
+            const {data: commit} = await octokit.rest.git.getCommit({
+                owner,
+                repo,
+                commit_sha: after,
+            });
+
             await exec.exec(`git config user.name ${commit.author.name}`);
             await exec.exec(`git config user.email ${commit.author.email}`);
             await exec.exec(`git fetch`);
