@@ -23149,12 +23149,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const releaseSha = release.object.sha;
 
-            // await octokit.rest.git.createRef({
-            //     owner,
-            //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: releaseSha,
-            // });
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: releaseSha,
+            });
 
             const {data: cherryPick} = await octokit.rest.git.getCommit({
                 owner,
@@ -23170,24 +23170,28 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 message: cherryPick.message
             });
 
-            const response = await octokit.rest.repos.merge({
+            const response = await octokit.rest.git.updateRef({
                 owner,
                 repo,
-                head: siblingCommit.sha,
-                base: releaseSha,
-                commit_message: `Merge ${commit} into ${releaseSha}`,
+                ref: `heads/${patchBranch}`,
+                sha: siblingCommit.sha,
+                force: true,
             });
 
             console.log(response);
 
-            // await octokit.rest.git.updateRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${patchBranch}`,
-            //     sha: siblingCommit.sha,
-            //     force: true,
-            // });
-            //
+            // try {
+            //     await octokit.rest.repos.merge({
+            //         owner,
+            //         repo,
+            //         head: siblingCommit.sha,
+            //         base: releaseSha,
+            //         commit_message: `Merge ${commit} into ${releaseSha}`,
+            //     });
+            // } catch (e) {
+            //     console.log(e);
+            // }
+
             // await octokit.rest.pulls.create({
             //     owner,
             //     repo,
