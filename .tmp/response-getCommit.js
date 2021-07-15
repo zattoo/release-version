@@ -1,61 +1,34 @@
 const resonse = {
-    status: 200,
-    url: 'https://api.github.com/repos/zattoo/cactus/git/commits/2811674a386fcdf618ff3dd228e16df04bcff77c',
-    headers: {
-        'access-control-allow-origin': '*',
-        'access-control-expose-headers': 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset',
-        'cache-control': 'private, max-age=60, s-maxage=60',
-        connection: 'close',
-        'content-encoding': 'gzip',
-        'content-security-policy': 'default-src \'none\'',
-        'content-type': 'application/json; charset=utf-8',
-        date: 'Wed, 14 Jul 2021 15:37:44 GMT',
-        etag: 'W/"fa9aac7c9a7debd7d23d15020d555c2db22ba0155cf6d2d66c75443e843cd27b"',
-        'last-modified': 'Wed, 14 Jul 2021 14:55:16 GMT',
-        'referrer-policy': 'origin-when-cross-origin, strict-origin-when-cross-origin',
-        server: 'GitHub.com',
-        'strict-transport-security': 'max-age=31536000; includeSubdomains; preload',
-        'transfer-encoding': 'chunked',
-        vary: 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding, Accept, X-Requested-With',
-        'x-accepted-oauth-scopes': '',
-        'x-content-type-options': 'nosniff',
-        'x-frame-options': 'deny',
-        'x-github-media-type': 'github.v3; format=json',
-        'x-github-request-id': '0405:7C11:246054:6772E6:60EF04C8',
-        'x-oauth-scopes': 'delete:packages, gist, notifications, repo, user, workflow, write:discussion, write:packages',
-        'x-ratelimit-limit': '5000',
-        'x-ratelimit-remaining': '4807',
-        'x-ratelimit-reset': '1626278563',
-        'x-ratelimit-resource': 'core',
-        'x-ratelimit-used': '193',
-        'x-xss-protection': '0'
+    sha: '6d5ee245e206795ea75267fc360e5cacc96c6df8',
+    node_id: 'MDY6Q29tbWl0Mzg1NTkyNjE0OjZkNWVlMjQ1ZTIwNjc5NWVhNzUyNjdmYzM2MGU1Y2FjYzk2YzZkZjg=',
+    url: 'https://api.github.com/repos/zattoo/cactus/git/commits/6d5ee245e206795ea75267fc360e5cacc96c6df8',
+    html_url: 'https://github.com/zattoo/cactus/commit/6d5ee245e206795ea75267fc360e5cacc96c6df8',
+    author: {
+        name: 'Bogdan Plieshka',
+        email: 'bogdanplieshka@gmail.com',
+        date: '2021-07-15T09:40:15Z'
     },
-    data: {
-        sha: '2811674a386fcdf618ff3dd228e16df04bcff77c',
-        node_id: 'MDY6Q29tbWl0Mzg1NTkyNjE0OjI4MTE2NzRhMzg2ZmNkZjYxOGZmM2RkMjI4ZTE2ZGYwNGJjZmY3N2M=',
-        url: 'https://api.github.com/repos/zattoo/cactus/git/commits/2811674a386fcdf618ff3dd228e16df04bcff77c',
-        html_url: 'https://github.com/zattoo/cactus/commit/2811674a386fcdf618ff3dd228e16df04bcff77c',
-        author: {
-            name: 'Bogdan Plieshka',
-            email: 'bogdanplieshka@gmail.com',
-            date: '2021-07-14T14:55:16Z'
-        },
-        committer: {
-            name: 'Bogdan Plieshka',
-            email: 'bogdanplieshka@gmail.com',
-            date: '2021-07-14T14:55:16Z'
-        },
-        tree: {
-            sha: '2b7a466eae7f09ac7659caee7d71d8b8e5bf4a48',
-            url: 'https://api.github.com/repos/zattoo/cactus/git/trees/2b7a466eae7f09ac7659caee7d71d8b8e5bf4a48'
-        },
-        message: 'Patch 1',
-        parents: [[Object]],
-        verification: {
-            verified: false,
-            reason: 'unsigned',
-            signature: null,
-            payload: null
+    committer: {
+        name: 'Bogdan Plieshka',
+        email: 'bogdanplieshka@gmail.com',
+        date: '2021-07-15T09:40:15Z'
+    },
+    tree: {
+        sha: '0d9d02a7575a28c13e6f1a42b5c22b8082c3a3c1',
+        url: 'https://api.github.com/repos/zattoo/cactus/git/trees/0d9d02a7575a28c13e6f1a42b5c22b8082c3a3c1'
+    },
+    message: 'Patch 3.1112.2',
+    parents: [
+        {
+            sha: 'ca4cae3e57adc9545693a0d1a00535ebf9a9980c',
+            url: 'https://api.github.com/repos/zattoo/cactus/git/commits/ca4cae3e57adc9545693a0d1a00535ebf9a9980c',
+            html_url: 'https://github.com/zattoo/cactus/commit/ca4cae3e57adc9545693a0d1a00535ebf9a9980c'
         }
+    ],
+    verification: {
+        verified: false,
+        reason: 'unsigned',
+        signature: null,
+        payload: null
     }
 };

@@ -23141,13 +23141,31 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
+            // get commit to cherry pick
             const {data: commit} = await octokit.rest.git.getCommit({
                 owner,
                 repo,
                 commit_sha: after,
             });
 
-            console.log(commit);
+            // create cherry pick
+            const {data: cherry} = await octokit.rest.git.createCommit({
+                owner,
+                repo,
+                tree: commit.tree.sha,
+                author: commit.author,
+                message: commit.message,
+                parent: commit.parents[0]
+            });
+
+            // create release branch
+            await octokit.rest.git.updateRef({
+                owner,
+                repo,
+                ref: `heads/${patchBranch}`,
+                sha: cherry.sha,
+                force: true,
+            });
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
@@ -23162,23 +23180,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             //     repo,
             //     ref: `refs/heads/${patchBranch}`,
             //     sha: release.object.sha,
-            // });
-
-            // commit to release branch
-            // await octokit.rest.git.updateRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${patchBranch}`,
-            //     sha: after,
-            //     force: true,
-            // });
-
-            // const {data: siblingCommit} = await octokit.rest.git.createCommit({
-            //     owner,
-            //     repo,
-            //     tree: cherryPick.tree.sha,
-            //     author: cherryPick.author,
-            //     message: cherryPick.message
             // });
 
             //
