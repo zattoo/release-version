@@ -129,39 +129,39 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: release.object.sha,
             });
 
-            const {data: cherryPick} = await octokit.rest.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
-
-            const {data: siblingCommit} = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                tree: cherryPick.tree.sha,
-                author: cherryPick.author,
-                message: cherryPick.message
-            });
-
-            await octokit.rest.git.updateRef({
-                owner,
-                repo,
-                ref: `heads/${patchBranch}`,
-                sha: siblingCommit.sha,
-                force: true,
-            });
-
-            try {
-                const dump = await octokit.rest.repos.merge({
-                    owner,
-                    repo,
-                    head: release.object.sha,
-                    base: patchBranch,
-                });
-                console.log(dump);
-            } catch (e) {
-                console.log(e);
-            }
+            // const {data: cherryPick} = await octokit.rest.git.getCommit({
+            //     owner,
+            //     repo,
+            //     commit_sha: after,
+            // });
+            //
+            // const {data: siblingCommit} = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     tree: cherryPick.tree.sha,
+            //     author: cherryPick.author,
+            //     message: cherryPick.message
+            // });
+            //
+            // await octokit.rest.git.updateRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${patchBranch}`,
+            //     sha: siblingCommit.sha,
+            //     force: true,
+            // });
+            //
+            // try {
+            //     const dump = await octokit.rest.repos.merge({
+            //         owner,
+            //         repo,
+            //         head: release.object.sha,
+            //         base: patchBranch,
+            //     });
+            //     console.log(dump);
+            // } catch (e) {
+            //     console.log(e);
+            // }
 
             // await octokit.rest.pulls.create({
             //     owner,
