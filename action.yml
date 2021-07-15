@@ -3,6 +3,8 @@ description: 'Release Version Manager'
 inputs:
   token:
     required: true
+  installation_token:
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

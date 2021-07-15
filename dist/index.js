@@ -23044,6 +23044,8 @@ const exit = (message, exitCode) => {
 };
 
 const exec = async (cmd) => {
+    const installation_token = core.getInput('installation_token', {required: true});
+
     let output = '';
     let error = '';
 
@@ -23164,15 +23166,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             // await exec(`git checkout ${patchBranch}`);
 
-
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
             //     owner,
             //     repo,
             //     ref: `heads/${releaseBranch}`,
             // });
-            //
-            // // branch patch from release
+
+            // branch patch from release
             // await octokit.rest.git.createRef({
             //     owner,
             //     repo,
