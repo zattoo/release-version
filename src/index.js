@@ -1,8 +1,8 @@
-const core = require('@actions/core');
-const exec = require('@actions/exec');
-const github = require('@actions/github');
-const parseChangelog = require('changelog-parser');
-const _ = require('lodash');
+import core from '@actions/core';
+import exec from '@actions/exec';
+import github from '@actions/github';
+import parseChangelog from 'changelog-parser';
+import _ from 'lodash';
 
 // todo: add ignore label
 
@@ -116,22 +116,23 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
+            await exec.exec(`curl -i -H "Authorization: Bearer ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
+            await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
+
             // get release branch
-            const {data: release} = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref: `heads/${releaseBranch}`,
-            });
+            // const {data: release} = await octokit.rest.git.getRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${releaseBranch}`,
+            // });
 
             // branch patch from release
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${patchBranch}`,
-                sha: release.object.sha,
-            });
-
-            await exec.exec(`git status`);
+            // await octokit.rest.git.createRef({
+            //     owner,
+            //     repo,
+            //     ref: `refs/heads/${patchBranch}`,
+            //     sha: release.object.sha,
+            // });
 
             // get commit to cherry pick
             // const {data: commit} = await octokit.rest.git.getCommit({

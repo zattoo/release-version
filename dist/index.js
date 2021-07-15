@@ -23021,13 +23021,25 @@ exports.getCmdPath = getCmdPath;
 /***/ }),
 
 /***/ 676:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
-const core = __webpack_require__(470);
-const exec = __webpack_require__(986);
-const github = __webpack_require__(469);
-const parseChangelog = __webpack_require__(734);
-const _ = __webpack_require__(557);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(470);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(986);
+/* harmony import */ var _actions_exec__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_actions_exec__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(469);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var changelog_parser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(734);
+/* harmony import */ var changelog_parser__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(changelog_parser__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(557);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
 
 // todo: add ignore label
 
@@ -23035,9 +23047,9 @@ let foundSomething = false;
 
 const exit = (message, exitCode) => {
     if (exitCode === 1) {
-        core.error(message);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().error(message);
     } else {
-        core.info(message);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(message);
     }
 
     process.exit(exitCode);
@@ -23065,7 +23077,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const bodyBefore = itemBefore.body;
 
         if (!dateBefore && dateAfter) {
-            core.info(`New ${versionAfter} candidate detected, preparing release...`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(`New ${versionAfter} candidate detected, preparing release...`);
             foundSomething = true;
             newVersions.push(item);
         }
@@ -23086,10 +23098,10 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 };
 
 (async () => {
-    const token = core.getInput('token', {required: true});
-    const octokit = github.getOctokit(token);
+    const token = _actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('token', {required: true});
+    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_2___default().getOctokit(token);
 
-    const {context} = github;
+    const {context} = _actions_github__WEBPACK_IMPORTED_MODULE_2___default.a;
     const {payload} = context;
 
     const {
@@ -23109,13 +23121,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
     const {files} = commit.data;
 
-    if (_.isEmpty(files)) {
+    if (lodash__WEBPACK_IMPORTED_MODULE_4___default().isEmpty(files)) {
         exit('No changes', 0);
     }
 
     const changelogs = files.filter((file) => file.filename.includes('CHANGELOG.md'));
 
-    if (_.isEmpty(changelogs)) {
+    if (lodash__WEBPACK_IMPORTED_MODULE_4___default().isEmpty(changelogs)) {
         exit('No changelog changes', 0);
     }
 
@@ -23127,7 +23139,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const first = Number(version[version.length - 1]) === 0;
 
         if (first) {
-            core.info(`Creating release branch ${releaseBranch}...`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(`Creating release branch ${releaseBranch}...`);
 
             try {
                 await octokit.rest.git.createRef({
@@ -23136,27 +23148,28 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                     ref: `refs/heads/${releaseBranch}`,
                     sha: after,
                 });
-                core.info(`Success: Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(`Success: Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
             } catch {
-                core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
+                _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
+            await _actions_exec__WEBPACK_IMPORTED_MODULE_1___default().exec(`curl -i -H "Authorization: Bearer ${_actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
+            await _actions_exec__WEBPACK_IMPORTED_MODULE_1___default().exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
+
             // get release branch
-            const {data: release} = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref: `heads/${releaseBranch}`,
-            });
+            // const {data: release} = await octokit.rest.git.getRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${releaseBranch}`,
+            // });
 
             // branch patch from release
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${patchBranch}`,
-                sha: release.object.sha,
-            });
-
-            await exec.exec(`git status`);
+            // await octokit.rest.git.createRef({
+            //     owner,
+            //     repo,
+            //     ref: `refs/heads/${patchBranch}`,
+            //     sha: release.object.sha,
+            // });
 
             // get commit to cherry pick
             // const {data: commit} = await octokit.rest.git.getCommit({
@@ -23216,7 +23229,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const split = filename.split('/');
         const project = split[split.length - 2];
 
-        core.info(`Analyzing ${project} project...`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(`Analyzing ${project} project...`);
 
         const [contentBefore, contentAfter] = await Promise.all([
             await octokit.rest.repos.getContent({
@@ -23234,13 +23247,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         ]);
 
         const [changelogBefore, changelogAfter] = await Promise.all([
-            await parseChangelog({text: Buffer.from(contentBefore.data.content, 'base64').toString()}),
-            await parseChangelog({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
+            await changelog_parser__WEBPACK_IMPORTED_MODULE_3___default()({text: Buffer.from(contentBefore.data.content, 'base64').toString()}),
+            await changelog_parser__WEBPACK_IMPORTED_MODULE_3___default()({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
         ]);
 
         const newVersions = getNewVersions(changelogBefore, changelogAfter);
 
-        if (!_.isEmpty(newVersions)) {
+        if (!lodash__WEBPACK_IMPORTED_MODULE_4___default().isEmpty(newVersions)) {
             await Promise.all(newVersions.map((version) => release(project, version)));
         }
     };
@@ -25410,6 +25423,40 @@ exports.getExecOutput = getExecOutput;
 /******/ function(__webpack_require__) { // webpackRuntimeModules
 /******/ 	"use strict";
 /******/ 
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	!function() {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = function(module) {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				function getDefault() { return module['default']; } :
+/******/ 				function getModuleExports() { return module; };
+/******/ 			__webpack_require__.d(getter, 'a', getter);
+/******/ 			return getter;
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getter */
+/******/ 	!function() {
+/******/ 		// define getter function for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = function(exports, name, getter) {
+/******/ 			if(!hasOwnProperty.call(exports, name)) {
+/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
 /******/ 	/* webpack/runtime/node module decorator */
 /******/ 	!function() {
 /******/ 		__webpack_require__.nmd = function(module) {
