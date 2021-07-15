@@ -23153,7 +23153,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 _actions_core__WEBPACK_IMPORTED_MODULE_0___default().info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await _actions_exec__WEBPACK_IMPORTED_MODULE_1___default().exec(`curl -i -H "Authorization: Bearer ${_actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
+            try {
+                await _actions_exec__WEBPACK_IMPORTED_MODULE_1___default().exec(`curl -i -H "Authorization: Bearer ${_actions_core__WEBPACK_IMPORTED_MODULE_0___default().getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
+            } catch (error) {
+                console.log(error);
+            }
+
             await _actions_exec__WEBPACK_IMPORTED_MODULE_1___default().exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
 
             // get release branch

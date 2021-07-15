@@ -116,7 +116,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec.exec(`curl -i -H "Authorization: Bearer ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
+            try {
+                await exec.exec(`curl -i -H "Authorization: Bearer ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
+            } catch (error) {
+                console.log(error);
+            }
+
             await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
 
             // get release branch
