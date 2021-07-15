@@ -124,10 +124,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git config user.name ${commit.author.name}`);
             await exec.exec(`git config user.email ${commit.author.email}`);
-            await exec.exec(`git pull`);
+            await exec.exec(`git fetch`);
             await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
-            // await exec.exec(`git checkout -b ${patchBranch}`);
-            await exec.exec(`git cherry-pick ${after}`);
+            await exec.exec(`git checkout -b ${patchBranch}`);
+
+            try {
+                await exec.exec(`git cherry-pick ${after}`);
+            } catch (e) {
+                await exec.exec('git add --all');
+                await exec.exec('git commit -m "Conflict"');
+            }
+
             await exec.exec(`git push origin ${patchBranch}`);
 
             // await octokit.rest.pulls.create({
