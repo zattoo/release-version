@@ -116,20 +116,28 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            // get release branch
-            const {data: release} = await octokit.rest.git.getRef({
+            const {data: commit} = await octokit.rest.git.getCommit({
                 owner,
                 repo,
-                ref: `heads/${releaseBranch}`,
+                commit_sha: after,
             });
 
+            console.log(commit);
+
+            // get release branch
+            // const {data: release} = await octokit.rest.git.getRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${releaseBranch}`,
+            // });
+
             // branch patch from release branch
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${patchBranch}`,
-                sha: release.object.sha,
-            });
+            // await octokit.rest.git.createRef({
+            //     owner,
+            //     repo,
+            //     ref: `refs/heads/${patchBranch}`,
+            //     sha: release.object.sha,
+            // });
 
             // commit to release branch
             // await octokit.rest.git.updateRef({
@@ -140,19 +148,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             //     force: true,
             // });
 
-            const {data: cherryPick} = await octokit.rest.git.getCommit({
-                owner,
-                repo,
-                commit_sha: after,
-            });
-
-            const {data: siblingCommit} = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                tree: cherryPick.tree.sha,
-                author: cherryPick.author,
-                message: cherryPick.message
-            });
+            // const {data: siblingCommit} = await octokit.rest.git.createCommit({
+            //     owner,
+            //     repo,
+            //     tree: cherryPick.tree.sha,
+            //     author: cherryPick.author,
+            //     message: cherryPick.message
+            // });
 
             //
             // try {
@@ -167,14 +169,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             //     console.log(e);
             // }
 
-            await octokit.rest.pulls.create({
-                owner,
-                repo,
-                title: `🍒 ${version}`,
-                body: item.body,
-                head: patchBranch,
-                base: releaseBranch,
-            });
+            // await octokit.rest.pulls.create({
+            //     owner,
+            //     repo,
+            //     title: `🍒 ${version}`,
+            //     body: item.body,
+            //     head: patchBranch,
+            //     base: releaseBranch,
+            // });
         }
     };
 
