@@ -22,7 +22,7 @@ const exec = async (cmd) => {
     let output = '';
     let error = '';
 
-    await exec_.exec(cmd, {
+    await exec_.exec(cmd, [], {
         listeners: {
             stdout: (data) => {
                 output += data.toString();
@@ -150,7 +150,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: release.object.sha,
             });
 
-            await exec('git status');
+            await exec(`git checkout ${patchBranch}`);
 
             // get commit to cherry pick
             // const {data: commit} = await octokit.rest.git.getCommit({
