@@ -20,23 +20,7 @@ const exit = (message, exitCode) => {
 
 const exec = async (cmd) => {
     const installation_token = core.getInput('installation_token', {required: true});
-
-    let output = '';
-    let error = '';
-
-    await exec_.exec(cmd, [], {
-        listeners: {
-            stdout: (data) => {
-                output += data.toString();
-            },
-            stderr: (data) => {
-                error += data.toString();
-            }
-        }
-    });
-
-    console.log(output);
-    console.log(error);
+    await exec_.exec(cmd);
 }
 
 const getNewVersions = (changelogBefore, changelogAfter) => {
