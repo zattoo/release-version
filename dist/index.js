@@ -23181,7 +23181,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                     owner,
                     repo,
                     head: patch.object.sha,
-                    base: patch.object.sha,
+                    base: releaseBranch,
                 });
                 console.log(dump);
             } catch (e) {
