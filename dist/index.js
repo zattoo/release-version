@@ -23141,6 +23141,21 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
+            // get release branch
+            const {data: release} = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${releaseBranch}`,
+            });
+
+            // branch patch from release
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: release.object.sha,
+            });
+
             // get commit to cherry pick
             const {data: commit} = await octokit.rest.git.getCommit({
                 owner,
@@ -23158,29 +23173,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 parent: commit.parents[0],
             });
 
-            // get release branch
-            const {data: release} = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref: `heads/${releaseBranch}`,
-            });
-
-            // branch patch from release branch
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${patchBranch}`,
-                sha: release.object.sha,
-            });
-
             // commit cherry pick
-            await octokit.rest.git.updateRef({
-                owner,
-                repo,
-                ref: `heads/${patchBranch}`,
-                sha: cherry.sha,
-                force: true,
-            });
+            try {
+                await octokit.rest.git.updateRef({
+                    owner,
+                    repo,
+                    ref: `heads/${patchBranch}`,
+                    sha: cherry.sha,
+                });
+            } catch (error) {
+                console.log(error);
+            }
 
             // try {
             //     const dump = await octokit.rest.repos.merge({
