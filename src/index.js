@@ -116,13 +116,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec.exec(`curl -H "Authorization: token ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/installation/repositories`);
+            await exec.exec(`curl -s -H "Authorization: token ${core.getInput('installation_token', {required: true})}" -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/installation/repositories`);
 
-            try {
-                await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
-            } catch (error) {
-                console.log(error);
-            }
+            await exec.exec('git pull');
+            await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
+            await exec.exec(`git status`);
+
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
