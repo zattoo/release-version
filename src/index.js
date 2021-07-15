@@ -121,8 +121,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec(`git checkout -b ${releaseBranch}`);
-            await exec(`git checkout -b ${patchBranch}`);
+            await exec(`git checkout -b patchBranch origin/${releaseBranch}`);
             await exec(`git status`);
 
             // get release branch
