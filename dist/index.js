@@ -23024,7 +23024,7 @@ exports.getCmdPath = getCmdPath;
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(470);
-const exec_ = __webpack_require__(986);
+const exec = __webpack_require__(986);
 const github = __webpack_require__(469);
 const parseChangelog = __webpack_require__(734);
 const _ = __webpack_require__(557);
@@ -23042,11 +23042,6 @@ const exit = (message, exitCode) => {
 
     process.exit(exitCode);
 };
-
-const exec = async (cmd) => {
-    const installation_token = core.getInput('installation_token', {required: true});
-    await exec_.exec(cmd);
-}
 
 const getNewVersions = (changelogBefore, changelogAfter) => {
     let newVersions = [];
@@ -23146,8 +23141,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
-            await exec(`git status`);
+            await exec.exec(`curl -i \\
+-H "Authorization: token ${core.getInput('installation_token', {required: true})}" \\
+-H "Accept: application/vnd.github.v3+json" \\
+https://api.github.com/installation/repositories`);
+
+            await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({

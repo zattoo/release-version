@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const exec_ = require('@actions/exec');
+const exec = require('@actions/exec');
 const github = require('@actions/github');
 const parseChangelog = require('changelog-parser');
 const _ = require('lodash');
@@ -17,11 +17,6 @@ const exit = (message, exitCode) => {
 
     process.exit(exitCode);
 };
-
-const exec = async (cmd) => {
-    const installation_token = core.getInput('installation_token', {required: true});
-    await exec_.exec(cmd);
-}
 
 const getNewVersions = (changelogBefore, changelogAfter) => {
     let newVersions = [];
@@ -121,8 +116,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            await exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
-            await exec(`git status`);
+            await exec.exec(`curl -i \\
+-H "Authorization: token ${core.getInput('installation_token', {required: true})}" \\
+-H "Accept: application/vnd.github.v3+json" \\
+https://api.github.com/installation/repositories`);
+
+            await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
