@@ -129,6 +129,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: release.object.sha,
             });
 
+            await octokit.rest.git.updateRef({
+                owner,
+                repo,
+                ref: `heads/${patchBranch}`,
+                sha: after,
+            });
+
             // const {data: cherryPick} = await octokit.rest.git.getCommit({
             //     owner,
             //     repo,
@@ -143,13 +150,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             //     message: cherryPick.message
             // });
             //
-            // await octokit.rest.git.updateRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${patchBranch}`,
-            //     sha: siblingCommit.sha,
-            //     force: true,
-            // });
+
             //
             // try {
             //     const dump = await octokit.rest.repos.merge({
