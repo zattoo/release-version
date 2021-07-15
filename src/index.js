@@ -122,7 +122,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             }
         } else {
             await exec(`git checkout -b ${releaseBranch}`);
-            await exec(`git checkout ${patchBranch}`);
+            await exec(`git checkout -b ${patchBranch}`);
             await exec(`git status`);
 
             // get release branch
