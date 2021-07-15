@@ -119,7 +119,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             await exec.exec(`git fetch`);
             await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
             await exec.exec(`git checkout -b ${patchBranch}`);
-            await exec.exec(`git cherry-pick --ff ${after}`);
+
+            try {
+                await exec.exec(`git cherry-pick ${after}`);
+            } catch (error) {
+                console.log(error);
+                await exec.exec('git diff --name-only --diff-filter=U');
+            }
+
             await exec.exec(`git push origin ${patchBranch}`);
 
             await octokit.rest.pulls.create({
