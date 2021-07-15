@@ -130,17 +130,23 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 tree: commit.tree.sha,
                 author: commit.author,
                 message: commit.message,
-                parent: commit.parents[0]
+                parent: commit.parents[0],
             });
 
+            console.log('cherry', cherry);
+
             // create release branch
-            await octokit.rest.git.updateRef({
-                owner,
-                repo,
-                ref: `heads/${patchBranch}`,
-                sha: cherry.sha,
-                force: true,
-            });
+            try {
+                await octokit.rest.git.updateRef({
+                    owner,
+                    repo,
+                    ref: `heads/${patchBranch}`,
+                    sha: cherry.sha,
+                    force: true,
+                });
+            } catch (error) {
+                console.log(error);
+            }
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
