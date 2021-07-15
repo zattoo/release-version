@@ -23154,7 +23154,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             await exec.exec(`git checkout -b ${patchBranch}`);
 
             try {
-                await exec.exec(`git cherry-pick ${after}`);
+                await exec.exec(`git cherry-pick origin/main`);
             } catch (e) {
                 await exec.exec('git add --all');
                 await exec.exec('git commit -m "Conflict"');
