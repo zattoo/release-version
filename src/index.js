@@ -1,8 +1,8 @@
-import core from '@actions/core';
-import exec from '@actions/exec';
-import github from '@actions/github';
-import parseChangelog from 'changelog-parser';
-import _ from 'lodash';
+const core = require('@actions/core');
+const exec = require('@actions/exec');
+const github = require('@actions/github');
+const parseChangelog = require('changelog-parser');
+const _ = require('lodash');
 
 // todo: add ignore label
 
@@ -116,13 +116,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
-            try {
-                await exec.exec(`curl -i -H "Authorization: Bearer ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
-            } catch (error) {
-                console.log(error);
-            }
+            await exec.exec(`curl -i -H "Authorization: Bearer ${core.getInput('installation_token', {required: true})}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/app`);
 
-            await exec.exec(`git checkout -b ${patchBranch} origin/${releaseBranch}`);
+            await exec.exec('git pull');
 
             // get release branch
             // const {data: release} = await octokit.rest.git.getRef({
