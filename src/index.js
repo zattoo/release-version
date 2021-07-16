@@ -101,6 +101,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const patchBranch = `patch/${project}/${version}`;
         const first = Number(version[version.length - 1]) === 0;
 
+        await exec.exec(`git fetch`);
+
         if (first) {
             await exec.exec(`git checkout -b ${releaseBranch}`);
 
@@ -119,7 +121,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git config user.name ${commit.author.name}`);
             await exec.exec(`git config user.email ${commit.author.email}`);
-            await exec.exec(`git fetch`);
             await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
             await exec.exec(`git checkout -b ${patchBranch}`);
 
