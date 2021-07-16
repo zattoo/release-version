@@ -102,18 +102,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const first = Number(version[version.length - 1]) === 0;
 
         if (first) {
-            core.info(`Creating release branch ${releaseBranch}...`);
+            await exec.exec(`git checkout -b ${releaseBranch}`);
 
             try {
-                await octokit.rest.git.createRef({
-                    owner,
-                    repo,
-                    ref: `refs/heads/${releaseBranch}`,
-                    sha: after,
-                });
-                core.info(`Success: Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
-            } catch {
-                core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
+                await exec.exec(`git push origin ${releaseBranch}`);
+                exit(`Success: Branch ${releaseBranch} created.\nSee ${releaseUrl}`, 0);
+            } catch (e) {
+                exit(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`, 0);
             }
         } else {
             const {data: commit} = await octokit.rest.git.getCommit({
