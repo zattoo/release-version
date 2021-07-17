@@ -126,7 +126,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                     ` github-cherry-pick is designed for the rebase workflow and doesn't support merge commits.`);
             }
 
-            const {data: sibling} = await octokit.git.createCommit({
+            const {data: sibling} = await octokit.rest.git.createCommit({
                 owner,
                 repo,
                 author: commit.author,
