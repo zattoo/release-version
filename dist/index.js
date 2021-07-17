@@ -23163,7 +23163,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             await octokit.rest.git.updateRef({
                 owner,
                 repo,
-                ref: `heads/${patchBranch}`,
+                ref: `heads/main`,
                 sha: sibling.sha,
             });
 
