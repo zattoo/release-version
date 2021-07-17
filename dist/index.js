@@ -23145,7 +23145,22 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            console.log(commit);
+            if (commit.parents.length > 1) {
+                // todo: create conflict PR
+                throw new Error(`Commit ${commit.sha} has ${commit.parents.length} parents.` +
+                    ` github-cherry-pick is designed for the rebase workflow and doesn't support merge commits.`);
+            }
+
+            const {data: sibling} = await octokit.git.createCommit({
+                owner,
+                repo,
+                author: commit.author,
+                message: commit.message,
+                parents: commit.parents,
+                tree: commit.tree,
+            });
+
+            console.log('sibling', sibling);
 
             // await octokit.rest.pulls.create({
             //     owner,
