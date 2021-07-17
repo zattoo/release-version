@@ -160,8 +160,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const dump = await octokit.rest.repos.merge({
                     owner,
                     repo,
-                    head: cleanRef.object.sha,
-                    base: releaseBranch,
+                    head: releaseBranch,
+                    base: cleanRef.object.sha,
                 });
                 console.log(dump);
             } catch (e) {
