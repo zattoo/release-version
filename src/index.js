@@ -101,16 +101,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const patchBranch = `patch/${project}/${version}`;
         const first = Number(version[version.length - 1]) === 0;
 
-        await exec.exec(`git fetch`);
-
         if (first) {
-            await exec.exec(`git checkout -b ${releaseBranch}`);
-
             try {
-                await exec.exec(`git push origin ${releaseBranch}`);
-                exit(`Success: Branch ${releaseBranch} created.\nSee ${releaseUrl}`, 0);
-            } catch (e) {
-                exit(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`, 0);
+                await octokit.rest.git.createRef({
+                    owner,
+                    repo,
+                    ref: `refs/heads/`,
+                    sha: after,
+                });
+                core.info(`Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
+            } catch {
+                core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
             const {data: commit} = await octokit.rest.git.getCommit({
@@ -119,28 +120,16 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            await exec.exec(`git config user.name ${commit.author.name}`);
-            await exec.exec(`git config user.email ${commit.author.email}`);
-            await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
-            await exec.exec(`git checkout -b ${patchBranch}`);
+            console.log(commit);
 
-            try {
-                await exec.exec(`git cherry-pick origin/main`);
-            } catch (e) {
-                await exec.exec('git add --all');
-                await exec.exec('git commit -m "Conflict"');
-            }
-
-            await exec.exec(`git push origin ${patchBranch}`);
-
-            await octokit.rest.pulls.create({
-                owner,
-                repo,
-                title: `🍒 ${version}`,
-                body: item.body,
-                head: patchBranch,
-                base: releaseBranch,
-            });
+            // await octokit.rest.pulls.create({
+            //     owner,
+            //     repo,
+            //     title: `🍒 ${version}`,
+            //     body: item.body,
+            //     head: patchBranch,
+            //     base: releaseBranch,
+            // });
         }
     };
 
