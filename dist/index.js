@@ -23131,7 +23131,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await octokit.rest.git.createRef({
                     owner,
                     repo,
-                    ref: `refs/heads/`,
+                    ref: `refs/heads/${releaseBranch}`,
                     sha: after,
                 });
                 core.info(`Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
@@ -23160,28 +23160,26 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 parent: commit.parents[0],
             });
 
+            const {data: release} = await octokit.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${releaseBranch}`,
+            });
+
+            await octokit.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${patchBranch}`,
+                sha: release.object.sha,
+            });
+
             await octokit.rest.git.updateRef({
                 owner,
                 repo,
-                ref: `heads/main`, // which branch?
+                ref: `heads/${patchBranch}`,
                 sha: sibling.sha,
                 force: true,
             });
-
-            // get release branch
-            // const {data: release} = await octokit.rest.git.getRef({
-            //     owner,
-            //     repo,
-            //     ref: `heads/${releaseBranch}`,
-            // });
-
-            // branch patch from release
-            // await octokit.rest.git.createRef({
-            //     owner,
-            //     repo,
-            //     ref: `refs/heads/${patchBranch}`,
-            //     sha: release.object.sha,
-            // });
 
             // try {
             //     const dump = await octokit.rest.repos.merge({

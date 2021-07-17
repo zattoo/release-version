@@ -106,7 +106,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await octokit.rest.git.createRef({
                     owner,
                     repo,
-                    ref: `refs/heads/`,
+                    ref: `refs/heads/${releaseBranch}`,
                     sha: after,
                 });
                 core.info(`Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
