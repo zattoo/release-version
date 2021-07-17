@@ -138,7 +138,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             await octokit.rest.git.updateRef({
                 owner,
                 repo,
-                ref: `heads/${patchBranch}`, // which branch?
+                ref: `heads/main`, // which branch?
                 sha: sibling.sha,
                 force: true,
             });
