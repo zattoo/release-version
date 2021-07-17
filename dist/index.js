@@ -23181,6 +23181,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 force: true,
             });
 
+            console.log(newBranch);
+
             try {
                 const dump = await octokit.rest.repos.merge({
                     owner,
