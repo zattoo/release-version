@@ -23154,13 +23154,52 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             const {data: sibling} = await octokit.rest.git.createCommit({
                 owner,
                 repo,
+                tree: commit.tree.sha,
                 author: commit.author,
                 message: commit.message,
-                parents: commit.parents,
-                tree: commit.tree.sha,
+                parent: commit.parents[0],
             });
 
             console.log('sibling', sibling);
+
+            // get release branch
+            // const {data: release} = await octokit.rest.git.getRef({
+            //     owner,
+            //     repo,
+            //     ref: `heads/${releaseBranch}`,
+            // });
+
+            // branch patch from release
+            // await octokit.rest.git.createRef({
+            //     owner,
+            //     repo,
+            //     ref: `refs/heads/${patchBranch}`,
+            //     sha: release.object.sha,
+            // });
+
+            // commit cherry pick
+            // try {
+            //     await octokit.rest.git.updateRef({
+            //         owner,
+            //         repo,
+            //         ref: `heads/${patchBranch}`,
+            //         sha: cherry.sha,
+            //     });
+            // } catch (error) {
+            //     console.log(error);
+            // }
+
+            // try {
+            //     const dump = await octokit.rest.repos.merge({
+            //         owner,
+            //         repo,
+            //         head: release.object.sha,
+            //         base: patchBranch,
+            //     });
+            //     console.log(dump);
+            // } catch (e) {
+            //     console.log(e);
+            // }
 
             // await octokit.rest.pulls.create({
             //     owner,
