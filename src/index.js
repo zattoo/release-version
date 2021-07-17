@@ -132,7 +132,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 author: commit.author,
                 message: commit.message,
                 parents: commit.parents,
-                tree: commit.tree,
+                tree: commit.tree.sha,
             });
 
             console.log('sibling', sibling);
