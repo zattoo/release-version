@@ -23173,7 +23173,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: release.object.sha,
             });
 
-            await octokit.rest.git.updateRef({
+            const response = await octokit.rest.git.updateRef({
                 owner,
                 repo,
                 ref: `heads/${patchBranch}`,
@@ -23181,17 +23181,19 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 force: true,
             });
 
-            // try {
-            //     const dump = await octokit.rest.repos.merge({
-            //         owner,
-            //         repo,
-            //         head: release.object.sha,
-            //         base: patchBranch,
-            //     });
-            //     console.log(dump);
-            // } catch (e) {
-            //     console.log(e);
-            // }
+            console.log('response', response);
+
+            try {
+                const dump = await octokit.rest.repos.merge({
+                    owner,
+                    repo,
+                    head: sibling.sha,
+                    base: releaseBranch,
+                });
+                console.log(dump);
+            } catch (e) {
+                console.log(e);
+            }
 
             // await octokit.rest.pulls.create({
             //     owner,

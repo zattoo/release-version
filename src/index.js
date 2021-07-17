@@ -158,17 +158,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             console.log('response', response);
 
-            // try {
-            //     const dump = await octokit.rest.repos.merge({
-            //         owner,
-            //         repo,
-            //         head: release.object.sha,
-            //         base: patchBranch,
-            //     });
-            //     console.log(dump);
-            // } catch (e) {
-            //     console.log(e);
-            // }
+            try {
+                const dump = await octokit.rest.repos.merge({
+                    owner,
+                    repo,
+                    head: sibling.sha,
+                    base: releaseBranch,
+                });
+                console.log(dump);
+            } catch (e) {
+                console.log(e);
+            }
 
             // await octokit.rest.pulls.create({
             //     owner,
