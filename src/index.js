@@ -156,17 +156,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 force: true,
             });
 
-            // try {
-            //     const dump = await octokit.rest.repos.merge({
-            //         owner,
-            //         repo,
-            //         head: releaseBranch,
-            //         base: newBranch.object.sha,
-            //     });
-            //     console.log(dump);
-            // } catch (e) {
-            //     console.log(e);
-            // }
+            try {
+                const dump = await octokit.rest.repos.merge({
+                    owner,
+                    repo,
+                    head: releaseBranch,
+                    base: newBranch.object.sha,
+                });
+                console.log(dump);
+            } catch (e) {
+                console.log(e);
+            }
 
             // await octokit.rest.pulls.create({
             //     owner,
