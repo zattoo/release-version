@@ -148,7 +148,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 sha: release.object.sha,
             });
 
-            const {data: cleanRef} = await octokit.rest.git.updateRef({
+            await octokit.rest.git.updateRef({
                 owner,
                 repo,
                 ref: `heads/${patchBranch}`,
@@ -160,8 +160,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const dump = await octokit.rest.repos.merge({
                     owner,
                     repo,
-                    head: releaseBranch,
-                    base: cleanRef.object.sha,
+                    head: release.object.sha,
+                    base: patchBranch,
                 });
                 console.log(dump);
             } catch (e) {
