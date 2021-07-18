@@ -17,6 +17,10 @@ const isEmpty = (value) => {
     );
 };
 
+const getLastVersion = (version) => {
+    return version.slice(0, -1) + Number(version[version.length - 1]) - 1;
+}
+
 const exit = (message, exitCode) => {
     if (exitCode === 1) {
         core.error(message);
@@ -104,6 +108,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, item) => {
+        console.log('item', item);
+
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
@@ -141,17 +147,20 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await exec.exec(`git cherry-pick ${after}`);
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
+                const changelogPath = 'projects/${project}/CHANGELOG.md';
+                const changelog = await fse.readFile(changelogPath, 'utf-8');
 
-                const file = await fse.readFile(`projects/${project}/CHANGELOG.md`, 'utf-8');
+                const lastVersion = getLastVersion(version);
+                const split = `## ${lastVersion}`;
+                const [before, after] = changelog.split();
+                const newEntry = `\n## ${version}\n${item.body}`;
 
-                console.log(file);
-
-                // await exec.exec('git status');
-                // await exec.exec('git add --all');
-                // await exec.exec(`git commit -m "Patch ${version}"`);
+                await fse.writeFile(changelogPath, before + newEntry + split + after,'utf-8');
+                await exec.exec('git add changelogPath');
+                await exec.exec(`git commit -m "Patch ${version}"`);
             }
 
-            // await exec.exec(`git push origin ${patchBranch}`);
+            await exec.exec(`git push origin ${patchBranch}`);
 
             // await octokit.rest.pulls.create({
             //     owner,
