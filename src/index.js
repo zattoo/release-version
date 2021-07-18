@@ -147,13 +147,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await exec.exec(`git cherry-pick ${after}`);
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
-                const changelogPath = 'projects/${project}/CHANGELOG.md';
+                const changelogPath = `projects/${project}/CHANGELOG.md`;
                 const changelog = await fse.readFile(changelogPath, 'utf-8');
 
                 const lastVersion = getLastVersion(version);
                 const split = `## ${lastVersion}`;
                 const [before, after] = changelog.split();
-                const newEntry = `\n## ${version}\n${item.body}`;
+                const newEntry = `\n## ${item.title}\n${item.body}\n`;
 
                 await fse.writeFile(changelogPath, before + newEntry + split + after,'utf-8');
                 await exec.exec('git add changelogPath');
