@@ -103,6 +103,8 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, item) => {
+        console.log('item', item);
+
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
