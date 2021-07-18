@@ -160,17 +160,15 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git push origin ${patchBranch}`);
 
-            const response = await octokit.rest.search.users({
-                q: `${commit.author.email} in:email`,
-            });
+            const {data: user} = await octokit.rest.search.users({q: `${commit.author.email} in:email`});
 
-            console.log('response', response);
+            const username = user?.items?.login;
 
             await octokit.rest.pulls.create({
                 owner,
                 repo,
                 title: `🍒 ${version}`,
-                body: `Cherry-pick got conflict and can't be automatically merged. ${commit.author.name}, please copy your changes to this PR manually.`,
+                body: `Cherry-pick got conflict and can't be automatically merged. ${username ? '@' + username : commit.author.name}, please copy your changes to this PR manually.`,
                 head: patchBranch,
                 base: releaseBranch,
                 draft: true,
