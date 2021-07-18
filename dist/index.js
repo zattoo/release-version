@@ -8264,7 +8264,7 @@ exports.getCmdPath = getCmdPath;
 const core = __webpack_require__(470);
 const exec = __webpack_require__(986);
 const github = __webpack_require__(469);
-const fse = __webpack_require__(226)
+const fse = __webpack_require__(226);
 const parseChangelog = __webpack_require__(734);
 
 // todo: add ignore label
@@ -8405,7 +8405,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
 
-                const file = fse.readFile(`projects/${project}/CHANGELOG.md`);
+                const file = await fse.readFile(`projects/${project}/CHANGELOG.md`);
 
                 console.log(file);
 
