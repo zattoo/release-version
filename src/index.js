@@ -160,11 +160,11 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git push origin ${patchBranch}`);
 
-            const {data} = await octokit.rest.search.users({q: `${commit.author.email} in:email`});
+            const {data: user} = await octokit.rest.search.users({q: `${commit.author.email} in:email`});
 
             const username = user && user.items[0] && user.items[0].login;
 
-            const {data: pr} = await octokit.rest.pulls.create({
+            const response = await octokit.rest.pulls.create({
                 owner,
                 repo,
                 title: `🍒 ${version}`,
@@ -174,16 +174,16 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 draft: true,
             });
 
-            console.log('data', data);
+            console.log('data', response);
 
-            if (username) {
-                await octokit.rest.issues.addAssignees({
-                    owner,
-                    repo,
-                    issue_number: pr.id,
-                    assignees: [username]
-                });
-            }
+            // if (username) {
+            //     await octokit.rest.issues.addAssignees({
+            //         owner,
+            //         repo,
+            //         issue_number: pr.id,
+            //         assignees: [username]
+            //     });
+            // }
         }
     };
 
