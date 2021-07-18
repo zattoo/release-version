@@ -101,14 +101,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const patchBranch = `patch/${project}/${version}`;
         const first = Number(version[version.length - 1]) === 0;
 
+        await exec.exec(`git fetch`);
+
         if (first) {
+            core.info(`Creating release branch ${releaseBranch}...`);
+
             try {
-                await octokit.rest.git.createRef({
-                    owner,
-                    repo,
-                    ref: `refs/heads/${releaseBranch}`,
-                    sha: after,
-                });
+                await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
+                await exec.exec(`git push origin ${releaseBranch}`);
                 core.info(`Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
             } catch {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
@@ -120,53 +120,19 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            if (commit.parents.length > 1) {
-                // todo: create conflict PR
-                throw new Error(`Commit ${commit.sha} has ${commit.parents.length} parents.` +
-                    ` github-cherry-pick is designed for the rebase workflow and doesn't support merge commits.`);
-            }
-
-            const {data: sibling} = await octokit.rest.git.createCommit({
-                owner,
-                repo,
-                tree: commit.tree.sha,
-                author: commit.author,
-                message: commit.message,
-                parent: commit.parents[0],
-            });
-
-            const {data: release} = await octokit.rest.git.getRef({
-                owner,
-                repo,
-                ref: `heads/${releaseBranch}`,
-            });
-
-            await octokit.rest.git.createRef({
-                owner,
-                repo,
-                ref: `refs/heads/${patchBranch}`,
-                sha: release.object.sha,
-            });
-
-            await octokit.rest.git.updateRef({
-                owner,
-                repo,
-                ref: `heads/${patchBranch}`,
-                sha: sibling.sha,
-                force: true,
-            });
+            await exec.exec(`git config user.name ${commit.author.name}`);
+            await exec.exec(`git config user.email ${commit.author.email}`);
+            await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
+            await exec.exec(`git checkout -b ${patchBranch}`);
 
             try {
-                const dump = await octokit.rest.repos.merge({
-                    owner,
-                    repo,
-                    head: release.object.sha,
-                    base: patchBranch,
-                });
-                console.log(dump);
+                await exec.exec(`git cherry-pick ${after}`);
             } catch (e) {
-                console.log(e);
+                await exec.exec('git add --all');
+                await exec.exec('git commit -m "Conflict"');
             }
+
+            await exec.exec(`git push origin ${patchBranch}`);
 
             // await octokit.rest.pulls.create({
             //     owner,
