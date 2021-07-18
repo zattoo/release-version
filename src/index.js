@@ -160,7 +160,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git push origin ${patchBranch}`);
 
-            const {data: user} = await octokit.rest.search.users({q: `${commit.author.email} in:email`});
+            const {data} = await octokit.rest.search.users({q: `${commit.author.email} in:email`});
 
             const username = user && user.items[0] && user.items[0].login;
 
@@ -174,8 +174,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 draft: true,
             });
 
-            console.log('username', username);
-            console.log('pr', pr.id);
+            console.log('data', data);
 
             if (username) {
                 await octokit.rest.issues.addAssignees({
