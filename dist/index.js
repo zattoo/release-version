@@ -1598,6 +1598,13 @@ module.exports = require("timers");
 
 /***/ }),
 
+/***/ 225:
+/***/ (function(module) {
+
+module.exports = require("fs/promises");
+
+/***/ }),
+
 /***/ 228:
 /***/ (function(module) {
 
@@ -5807,6 +5814,7 @@ exports.getCmdPath = getCmdPath;
 const core = __webpack_require__(470);
 const exec = __webpack_require__(986);
 const github = __webpack_require__(469);
+const fsp = __webpack_require__(225)
 const parseChangelog = __webpack_require__(734);
 
 // todo: add ignore label
@@ -5946,13 +5954,17 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await exec.exec(`git cherry-pick ${after}`);
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
-                await exec.exec(`echo "test" > ./projects/${project}/CHANGELOG.md`);
-                await exec.exec('git status');
-                await exec.exec('git add --all');
-                await exec.exec(`git commit -m "Patch ${version}"`);
+
+                const file = await fsp.readFile(`projects/${project}/CHANGELOG.md`);
+
+                console.log(file);
+
+                // await exec.exec('git status');
+                // await exec.exec('git add --all');
+                // await exec.exec(`git commit -m "Patch ${version}"`);
             }
 
-            await exec.exec(`git push origin ${patchBranch}`);
+            // await exec.exec(`git push origin ${patchBranch}`);
 
             // await octokit.rest.pulls.create({
             //     owner,
