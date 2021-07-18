@@ -8410,13 +8410,10 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await exec.exec('git cherry-pick --abort');
 
                 const changelogPath = `projects/${project}/CHANGELOG.md`;
-
                 const changelog = await fse.readFile(changelogPath, 'utf-8');
-
                 const lastVersion = getLastVersion(version);
-
                 const split = `## ${lastVersion}`;
-                const [before, after] = changelog.split();
+                const [before, after] = changelog.split(split);
                 const newEntry = `\n## ${item.title}\n\n${item.body}\n\n`;
 
                 await fse.writeFile(changelogPath, before + newEntry + split + after,'utf-8');
@@ -8426,14 +8423,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git push origin ${patchBranch}`);
 
-            // await octokit.rest.pulls.create({
-            //     owner,
-            //     repo,
-            //     title: `🍒 ${version}`,
-            //     body: item.body,
-            //     head: patchBranch,
-            //     base: releaseBranch,
-            // });
+            await octokit.rest.pulls.create({
+                owner,
+                repo,
+                title: `🍒 ${version}`,
+                body: item.body,
+                head: patchBranch,
+                base: releaseBranch,
+            });
         }
     };
 
