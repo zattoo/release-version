@@ -18,8 +18,8 @@ const isEmpty = (value) => {
 };
 
 const getLastVersion = (version) => {
-    return version.slice(0, -1) + Number(version[version.length - 1]) - 1;
-}
+    return version.slice(0, -1) + (Number(version[version.length - 1]) - 1);
+};
 
 const exit = (message, exitCode) => {
     if (exitCode === 1) {
@@ -151,9 +151,10 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const changelog = await fse.readFile(changelogPath, 'utf-8');
 
                 const lastVersion = getLastVersion(version);
+
                 const split = `## ${lastVersion}`;
                 const [before, after] = changelog.split();
-                const newEntry = `\n## ${item.title}\n${item.body}\n`;
+                const newEntry = `\n## ${item.title}\n\n${item.body}\n\n`;
 
                 await fse.writeFile(changelogPath, before + newEntry + split + after,'utf-8');
                 await exec.exec(`git add ${changelogPath}`);
