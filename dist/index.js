@@ -8414,7 +8414,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const lastVersion = getLastVersion(version);
                 const split = `## [${lastVersion}]`;
                 const [before, after] = changelog.split(split);
-                const newEntry = `\n## ${item.title}\n\n${item.body}\n\n`;
+                const newEntry = `## ${item.title}\n\n${item.body}\n\n`;
 
                 await fse.writeFile(changelogPath, before + newEntry + split + after,'utf-8');
                 await exec.exec(`git add ${changelogPath}`);
@@ -8427,9 +8427,10 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 owner,
                 repo,
                 title: `🍒 ${version}`,
-                body: item.body,
+                body: `Cherry-pick got conflict and can't be automatically merged. ${commit.author.name}, please copy your changes to this PR manually.`,
                 head: patchBranch,
                 base: releaseBranch,
+                draft: true,
             });
         }
     };
