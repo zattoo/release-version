@@ -107,7 +107,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             core.info(`Creating release branch ${releaseBranch}...`);
 
             try {
-                await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
+                await exec.exec(`git checkout -b ${releaseBranch}`);
                 await exec.exec(`git push origin ${releaseBranch}`);
                 core.info(`Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
             } catch {
