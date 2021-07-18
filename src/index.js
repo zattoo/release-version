@@ -108,8 +108,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, item) => {
-        console.log('item', item);
-
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
@@ -147,7 +145,9 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await exec.exec(`git cherry-pick ${after}`);
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
+
                 const changelogPath = `projects/${project}/CHANGELOG.md`;
+
                 const changelog = await fse.readFile(changelogPath, 'utf-8');
 
                 const lastVersion = getLastVersion(version);
@@ -156,7 +156,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const newEntry = `\n## ${item.title}\n${item.body}\n`;
 
                 await fse.writeFile(changelogPath, before + newEntry + split + after,'utf-8');
-                await exec.exec('git add changelogPath');
+                await exec.exec(`git add ${changelogPath}`);
                 await exec.exec(`git commit -m "Patch ${version}"`);
             }
 
