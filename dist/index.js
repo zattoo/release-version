@@ -8427,7 +8427,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const username = user && user.items[0] && user.items[0].login;
 
-            const response = await octokit.rest.pulls.create({
+            const {data: pr} = await octokit.rest.pulls.create({
                 owner,
                 repo,
                 title: `🍒 ${version}`,
@@ -8437,16 +8437,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 draft: true,
             });
 
-            console.log('data', response);
-
-            // if (username) {
-            //     await octokit.rest.issues.addAssignees({
-            //         owner,
-            //         repo,
-            //         issue_number: pr.id,
-            //         assignees: [username]
-            //     });
-            // }
+            if (username) {
+                await octokit.rest.issues.addAssignees({
+                    owner,
+                    repo,
+                    issue_number: pr.number,
+                    assignees: [username]
+                });
+            }
         }
     };
 
