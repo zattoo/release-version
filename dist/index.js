@@ -8427,15 +8427,27 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const username = user && user.items[0] && user.items[0].login;
 
-            await octokit.rest.pulls.create({
+            const {data: pr} = await octokit.rest.pulls.create({
                 owner,
                 repo,
                 title: `🍒 ${version}`,
-                body: `Cherry-pick got conflict and can't be automatically merged. ${username ? '@' + username : commit.author.name}, please copy your changes to this PR manually.`,
+                body: `Cherry-pick got conflict and can't be merged automatically. ${username ? '@' + username : commit.author.name}, please copy your changes to this PR manually.`,
                 head: patchBranch,
                 base: releaseBranch,
                 draft: true,
             });
+
+            console.log('username', username);
+            console.log('pr', pr.id);
+
+            if (username) {
+                await octokit.rest.issues.addAssignees({
+                    owner,
+                    repo,
+                    issue_number: pr.id,
+                    assignees: [username]
+                });
+            }
         }
     };
 
