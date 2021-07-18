@@ -162,7 +162,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             const {data: user} = await octokit.rest.search.users({q: `${commit.author.email} in:email`});
 
-            const username = user?.items?.login;
+            const username = user && user.items[0] && user.items[0].login;
 
             await octokit.rest.pulls.create({
                 owner,
