@@ -8423,6 +8423,12 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
             await exec.exec(`git push origin ${patchBranch}`);
 
+            const response = await octokit.rest.search.users({
+                q: `${commit.author.email} in:email`,
+            });
+
+            console.log('response', response);
+
             await octokit.rest.pulls.create({
                 owner,
                 repo,
