@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const github = require('@actions/github');
-const fsp = require('fs/promises')
+const fse = require('fs-extra')
 const parseChangelog = require('changelog-parser');
 
 // todo: add ignore label
@@ -142,7 +142,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
 
-                const file = await fsp.readFile(`projects/${project}/CHANGELOG.md`);
+                const file = fse.readFile(`projects/${project}/CHANGELOG.md`);
 
                 console.log(file);
 
