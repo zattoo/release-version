@@ -168,7 +168,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 owner,
                 repo,
                 title: `🍒 ${version}`,
-                body: `Cherry-pick got conflict and can't be merged automatically. ${username ? '@' + username : commit.author.name}, please copy your changes to this PR manually.`,
+                body: `Cherry-pick got conflict and can't be merged automatically.\n${username ? '@' + username : commit.author.name}, please copy your changes to this PR manually.`,
                 head: patchBranch,
                 base: releaseBranch,
                 draft: true,
