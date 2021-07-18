@@ -182,6 +182,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                     assignees: [username]
                 });
             }
+
+            await octokit.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: pr.number,
+                labels: ['patch'],
+            })
         }
     };
 
