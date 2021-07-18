@@ -103,8 +103,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
     }
 
     const release = async (project, item) => {
-        console.log('item', item);
-
         const {version} = item;
         const releaseBranch = `release/${project}/${version.slice(0, -2)}`;
         const releaseUrl = `https://github.com/zattoo/cactus/tree/${releaseBranch}`;
@@ -142,7 +140,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 await exec.exec(`git cherry-pick ${after}`);
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
-
+                await exec.exec(`echo "test" > projects/${project}/CHANGELOG.md`);
             }
 
             await exec.exec(`git push origin ${patchBranch}`);
@@ -183,8 +181,6 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
         const textBefore = Buffer.from(contentBefore.data.content, 'base64').toString();
         const textAfter = Buffer.from(contentAfter.data.content, 'base64').toString();
-
-        console.log('textBefore', textBefore);
 
         const [changelogBefore, changelogAfter] = await Promise.all([
             await parseChangelog({text: textBefore}),
