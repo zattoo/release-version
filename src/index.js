@@ -149,7 +149,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 const changelogPath = `projects/${project}/CHANGELOG.md`;
                 const changelog = await fse.readFile(changelogPath, 'utf-8');
                 const lastVersion = getLastVersion(version);
-                const split = `## ${lastVersion}`;
+                const split = `## [${lastVersion}]`;
                 const [before, after] = changelog.split(split);
                 const newEntry = `\n## ${item.title}\n\n${item.body}\n\n`;
 
