@@ -2,11 +2,19 @@ const core = require('@actions/core');
 const exec = require('@actions/exec');
 const github = require('@actions/github');
 const parseChangelog = require('changelog-parser');
-const _ = require('lodash');
 
 // todo: add ignore label
 
 let foundSomething = false;
+
+const isEmpty = (value) => {
+    return (
+        value === undefined ||
+        value === null ||
+        (typeof value === 'object' && Object.keys(value).length === 0) ||
+        (typeof value === 'string' && value.trim().length === 0)
+    );
+};
 
 const exit = (message, exitCode) => {
     if (exitCode === 1) {
@@ -84,13 +92,13 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
 
     const {files} = commit.data;
 
-    if (_.isEmpty(files)) {
+    if (isEmpty(files)) {
         exit('No changes', 0);
     }
 
     const changelogs = files.filter((file) => file.filename.includes('CHANGELOG.md'));
 
-    if (_.isEmpty(changelogs)) {
+    if (isEmpty(changelogs)) {
         exit('No changelog changes', 0);
     }
 
@@ -168,13 +176,19 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         ]);
 
         const [changelogBefore, changelogAfter] = await Promise.all([
-            await parseChangelog({text: Buffer.from(contentBefore.data.content, 'base64').toString()}),
-            await parseChangelog({text: Buffer.from(contentAfter.data.content, 'base64').toString()}),
+            await parseChangelog({
+                text: Buffer.from(contentBefore.data.content, 'base64')
+                    .toString()
+            }),
+            await parseChangelog({
+                text: Buffer.from(contentAfter.data.content, 'base64')
+                    .toString()
+            }),
         ]);
 
         const newVersions = getNewVersions(changelogBefore, changelogAfter);
 
-        if (!_.isEmpty(newVersions)) {
+        if (!isEmpty(newVersions)) {
             await Promise.all(newVersions.map((version) => release(project, version)));
         }
     };

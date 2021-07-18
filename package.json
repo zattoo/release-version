@@ -30,7 +30,6 @@
         "changelog-parser": "2.8.0"
     },
     "devDependencies": {
-        "@zeit/ncc": "0.22.3",
-        "lodash": "4.17.21"
+        "@zeit/ncc": "0.22.3"
     }
 }
