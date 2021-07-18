@@ -128,15 +128,19 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
                 commit_sha: after,
             });
 
-            await exec.exec(`git config user.name ${commit.author.name}`);
-            await exec.exec(`git config user.email ${commit.author.email}`);
+            await Promise.all([
+                exec.exec(`git config user.name ${commit.author.name}`),
+                exec.exec(`git config user.email ${commit.author.email}`),
+            ]);
+
             await exec.exec(`git checkout -b ${releaseBranch} origin/${releaseBranch}`);
             await exec.exec(`git checkout -b ${patchBranch}`);
 
             try {
                 await exec.exec(`git cherry-pick ${after}`);
-            } catch (e) {
+            } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
+
             }
 
             await exec.exec(`git push origin ${patchBranch}`);
@@ -175,15 +179,14 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             }),
         ]);
 
+        const textBefore = Buffer.from(contentBefore.data.content, 'base64').toString();
+        const textAfter = Buffer.from(contentAfter.data.content, 'base64').toString();
+
+        console.log('textBefore', textBefore);
+
         const [changelogBefore, changelogAfter] = await Promise.all([
-            await parseChangelog({
-                text: Buffer.from(contentBefore.data.content, 'base64')
-                    .toString()
-            }),
-            await parseChangelog({
-                text: Buffer.from(contentAfter.data.content, 'base64')
-                    .toString()
-            }),
+            await parseChangelog({text: textBefore}),
+            await parseChangelog({text: textAfter}),
         ]);
 
         const newVersions = getNewVersions(changelogBefore, changelogAfter);
