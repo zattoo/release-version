@@ -8405,7 +8405,7 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
             } catch (e) { // conflict
                 await exec.exec('git cherry-pick --abort');
 
-                const file = await fse.readFile(`projects/${project}/CHANGELOG.md`);
+                const file = await fse.readFile(`projects/${project}/CHANGELOG.md`, 'utf-8');
 
                 console.log(file);
 
