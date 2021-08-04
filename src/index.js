@@ -4,8 +4,6 @@ const github = require('@actions/github');
 const fse = require('fs-extra');
 const parseChangelog = require('changelog-parser');
 
-// todo: add ignore label
-
 let foundSomething = false;
 
 const isEmpty = (value) => {
