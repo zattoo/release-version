@@ -8267,8 +8267,6 @@ const github = __webpack_require__(469);
 const fse = __webpack_require__(226);
 const parseChangelog = __webpack_require__(734);
 
-// todo: add ignore label
-
 let foundSomething = false;
 
 const isEmpty = (value) => {
