@@ -8377,19 +8377,23 @@ const getNewVersions = (changelogBefore, changelogAfter) => {
         const patchBranch = `patch/${project}/${version}`;
         const first = Number(version[version.length - 1]) === 0;
 
-        await exec.exec(`git fetch`);
-
         if (first) {
             core.info(`Creating release branch ${releaseBranch}...`);
 
             try {
-                await exec.exec(`git checkout -b ${releaseBranch}`);
-                await exec.exec(`git push origin ${releaseBranch}`);
+                await octokit.rest.git.createRef({
+                    owner,
+                    repo,
+                    ref: releaseBranch,
+                    sha: after,
+                });
                 core.info(`Branch ${releaseBranch} created.\nSee ${releaseUrl}`);
             } catch {
                 core.info(`Release ${releaseBranch} already exist.\nSee ${releaseUrl}`);
             }
         } else {
+            await exec.exec(`git fetch`);
+
             const {data: commit} = await octokit.rest.git.getCommit({
                 owner,
                 repo,
