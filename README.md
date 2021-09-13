@@ -2,6 +2,8 @@
 GitHub Action to create release branch. By default, it will amend `package.json` and `CHANGELOG.md` located in the root of the repository.
 If project is specified - aforementioned files will be located conforming Babylon structure.
 
+(!) Be aware, this action will only work when provided token is associated with user that has Admin permissions on reposotiry.
+
 ## Inputs
 
 ### `version`
