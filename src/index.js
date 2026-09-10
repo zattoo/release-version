@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const createVersion = require('./create-version');
+const createVersion = require('./create-version.js');
 
 (async () => {
     // extract input
@@ -12,8 +12,14 @@ const createVersion = require('./create-version');
     const production = core.getInput('production', {required: false});
     const releaseDateFormat = core.getInput('release-date-format', {required: false});
     const octokit = github.getOctokit(token);
-    const repo = github.context.payload.repository.name;
-    const owner = github.context.payload.repository.full_name.split('/')[0];
+    const {repository} = github.context.payload;
+
+    if (!repository || !repository.full_name) {
+        throw new Error('No repository found in the event payload.');
+    }
+
+    const repo = repository.name;
+    const owner = repository.full_name.split('/')[0];
     // commit id where we start
     const baseSha = github.context.sha;
     // branch name where we start
@@ -22,6 +28,7 @@ const createVersion = require('./create-version');
         repo,
         owner,
     };
+    /** @type {{mode: '100644', type: 'blob'}} */
     const baseFilePayload = {
         mode: '100644',
         type: 'blob',
@@ -47,6 +54,7 @@ const createVersion = require('./create-version');
     let releaseBranch = strategy;
     let productionBranch = production;
     let releaseTitle = `${strategy.charAt(0).toUpperCase() + strategy.slice(1)} ${version}`;
+
     if (project) {
         releaseTitle = `${releaseTitle}-${project}`;
         releaseBranch = `${releaseBranch}/${project}`;
@@ -68,6 +76,7 @@ const createVersion = require('./create-version');
     } catch (e) {
         throw new Error(`Branch ${releaseBranch} already exists.`);
     }
+
     const {data: tree} = await octokit.git.createTree({
         ...context,
         base_tree: baseSha,
@@ -90,6 +99,7 @@ const createVersion = require('./create-version');
         tree: tree.sha,
         parents: [baseSha],
     });
+
     await octokit.git.updateRef({
         ...context,
         sha: commit.sha,
@@ -117,6 +127,7 @@ const createVersion = require('./create-version');
             color: '000000',
         });
     }
+
     await octokit.issues.addLabels({
         ...context,
         issue_number: releasePullRequest.data.number,

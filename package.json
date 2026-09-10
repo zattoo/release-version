@@ -6,7 +6,7 @@
     "scripts": {
         "lint:fix": "eslint . --fix",
         "package": "ncc build src/index.js -o dist",
-        "test": "eslint . && jest"
+        "test": "eslint . && tsc && jest"
     },
     "repository": {
         "type": "git",
@@ -27,12 +27,19 @@
         "@actions/core": "1.2.6",
         "@actions/github": "4.0.0"
     },
+    "overrides": {
+        "@typescript-eslint/eslint-plugin": "8.70.0",
+        "@typescript-eslint/parser": "8.70.0",
+        "@typescript-eslint/utils": "8.70.0",
+        "@typescript-eslint/typescript-estree": "8.70.0",
+        "@typescript-eslint/type-utils": "8.70.0"
+    },
     "devDependencies": {
-        "@zattoo/eslint-config": "11.0.4",
-        "@zeit/ncc": "0.22.3",
-        "eslint": "7.14.0",
-        "eslint-config-airbnb-base": "14.2.0",
-        "eslint-plugin-import": "2.22.0",
-        "jest": "26.6.3"
+        "@types/node": "22.20.2",
+        "@vercel/ncc": "0.45.0",
+        "@zattoo/eslint-config": "17.0.0",
+        "eslint": "8.57.1",
+        "jest": "30.5.1",
+        "typescript": "6.0.3"
     }
 }
