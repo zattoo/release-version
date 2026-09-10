@@ -17,5 +17,5 @@ inputs:
     required: true
     default: 'DD.MM.YYYY'
 runs:
-  using: 'node12'
+  using: 'node24'
   main: 'dist/index.js'
