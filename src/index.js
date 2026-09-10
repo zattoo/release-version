@@ -12,8 +12,14 @@ const createVersion = require('./create-version.js');
     const production = core.getInput('production', {required: false});
     const releaseDateFormat = core.getInput('release-date-format', {required: false});
     const octokit = github.getOctokit(token);
-    const repo = github.context.payload.repository.name;
-    const owner = github.context.payload.repository.full_name.split('/')[0];
+    const {repository} = github.context.payload;
+
+    if (!repository || !repository.full_name) {
+        throw new Error('No repository found in the event payload.');
+    }
+
+    const repo = repository.name;
+    const owner = repository.full_name.split('/')[0];
     // commit id where we start
     const baseSha = github.context.sha;
     // branch name where we start
@@ -22,6 +28,7 @@ const createVersion = require('./create-version.js');
         repo,
         owner,
     };
+    /** @type {{mode: '100644', type: 'blob'}} */
     const baseFilePayload = {
         mode: '100644',
         type: 'blob',

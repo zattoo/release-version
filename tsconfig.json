@@ -1,0 +1,23 @@
+{
+    // Type-checks the JavaScript sources via JSDoc annotations.
+    // Emit is disabled: the shipped bundle is produced by `npm run package` (ncc).
+    "compilerOptions": {
+        "module": "nodenext",
+        "target": "esnext",
+        "lib": ["esnext"],
+        "types": ["node"],
+
+        "allowJs": true,
+        "checkJs": true,
+        "noEmit": true,
+
+        "strict": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true
+    },
+    "include": ["src"],
+    // Tests rely heavily on Jest mocks, which are impractical to type via JSDoc.
+    "exclude": ["src/**/__test__/**"]
+}

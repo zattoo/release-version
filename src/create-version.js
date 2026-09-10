@@ -12,7 +12,7 @@ module.exports.getReleaseDate = (releaseDateFormat) => {
     }
 
     return releaseDateFormat
-        .replace('YYYY', now.getFullYear())
+        .replace('YYYY', String(now.getFullYear()))
         .replace('MM', String(now.getMonth() + 1).padStart(2, '0'))
         .replace('DD', String(now.getDate()).padStart(2, '0'));
 };
@@ -20,7 +20,7 @@ module.exports.getReleaseDate = (releaseDateFormat) => {
 /**
  * @param {string} version
  * @param {string} [project]
- * @returns {string[]}
+ * @returns {Promise<string[]>}
  */
 module.exports.changePackageVersion = async (version, project) => {
     if (!version) {
@@ -52,7 +52,7 @@ module.exports.changePackageVersion = async (version, project) => {
  * @param {string} version
  * @param {string} [project]
  * @param {string} [releaseDate]
- * @returns {string[]}
+ * @returns {Promise<string[]>}
  */
 module.exports.changeChangelogVersion = async (version, project, releaseDate) => {
     if (!version) {
@@ -84,6 +84,12 @@ module.exports.changeChangelogVersion = async (version, project, releaseDate) =>
     return [changelogPath, modifiedChangelog];
 };
 
+/**
+ * @param {string[]} lines
+ * @param {string} search
+ * @param {number} [start]
+ * @returns {number}
+ */
 const indexOfLineStartWith = (lines, search, start = 0) => {
     return lines.findIndex((l, i) => {
         return i >= start && l.startsWith(search);
