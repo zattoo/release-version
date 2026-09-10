@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const createVersion = require('./create-version');
+const createVersion = require('./create-version.js');
 
 (async () => {
     // extract input
@@ -47,6 +47,7 @@ const createVersion = require('./create-version');
     let releaseBranch = strategy;
     let productionBranch = production;
     let releaseTitle = `${strategy.charAt(0).toUpperCase() + strategy.slice(1)} ${version}`;
+
     if (project) {
         releaseTitle = `${releaseTitle}-${project}`;
         releaseBranch = `${releaseBranch}/${project}`;
@@ -68,6 +69,7 @@ const createVersion = require('./create-version');
     } catch (e) {
         throw new Error(`Branch ${releaseBranch} already exists.`);
     }
+
     const {data: tree} = await octokit.git.createTree({
         ...context,
         base_tree: baseSha,
@@ -90,6 +92,7 @@ const createVersion = require('./create-version');
         tree: tree.sha,
         parents: [baseSha],
     });
+
     await octokit.git.updateRef({
         ...context,
         sha: commit.sha,
@@ -117,6 +120,7 @@ const createVersion = require('./create-version');
             color: '000000',
         });
     }
+
     await octokit.issues.addLabels({
         ...context,
         issue_number: releasePullRequest.data.number,
